@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оцифровка документов — из бумаги в таблицу</title>
+<meta name="description" content="Сканы и фото в Excel, Word и PDF. Проверка по правилам, ошибки помечаются. От 10 ₽ за страницу.">
+<meta property="og:title" content="Из бумаги — в таблицу">
+<meta property="og:description" content="Сканы и фото в Excel, Word и PDF. От 10 ₽ за страницу.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --ink:#14110e; --paper:#f6f1e6; --card:#fffdf8; --line:#e0d4be;
+    --accent:#c9571a; --muted:#6b6153;
+    --serif:Georgia,"PT Serif","Times New Roman",serif;
+    --sans:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--sans);
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  /* ---------- сцена: лист бумаги, по которому идёт сканер ---------- */
+  .hero{height:230vh;position:relative}
+  .stage{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center;
+         background:
+           radial-gradient(120% 90% at 50% 0%,#fffdf8 0%,#f6f1e6 55%,#efe6d6 100%)}
+  .sheet{position:relative;width:min(760px,86vw);aspect-ratio:1/1.28;background:var(--card);
+         border:1px solid var(--line);border-radius:6px;
+         box-shadow:0 30px 60px -28px rgba(60,42,20,.45),0 2px 0 #efe6d6;
+         transform-origin:50% 60%;will-change:transform;
+         display:flex;flex-direction:column;justify-content:center;padding:clamp(20px,5vw,56px);
+         overflow:hidden}
+  .sheet .row{height:10px;border-radius:3px;background:#eae1d1;margin:11px 0}
+  .sheet .row.short{width:62%}
+  .sheet .row.mid{width:82%}
+  .sheet .row.accentline{background:repeating-linear-gradient(90deg,#ddd0b8 0 6px,transparent 6px 12px);height:1px;margin:26px 0}
+  .sheet .seal{position:absolute;right:clamp(16px,4vw,40px);bottom:clamp(16px,4vw,40px);
+        width:88px;height:88px;border:2px solid #d8c8ac;border-radius:50%;color:#c3b193;
+        font:600 10px/1.2 var(--sans);display:grid;place-items:center;text-align:center;
+        transform:rotate(-12deg);letter-spacing:.08em;text-transform:uppercase}
+
+  /* что «проявляется» под сканером */
+  .reveal{position:absolute;inset:0;background:var(--card);padding:inherit;
+          clip-path:inset(0 0 calc(100% - var(--scan,0%)) 0);
+          display:flex;flex-direction:column;justify-content:center}
+  .grid-table{display:grid;grid-template-columns:1.6fr .8fr .8fr;border:1px solid var(--line);
+              border-radius:4px;overflow:hidden;font-size:clamp(11px,1.6vw,14px)}
+  .grid-table div{padding:9px 10px;border-bottom:1px solid var(--line);background:#fff}
+  .grid-table div:nth-child(-n+3){background:#f2e9d8;font-weight:600}
+  .grid-table div:nth-last-child(-n+3){border-bottom:0}
+  .grid-table .num{text-align:right;font-variant-numeric:tabular-nums}
+
+  /* сканирующий луч */
+  .beam{position:absolute;left:-4%;right:-4%;height:2px;top:var(--scan,0%);
+        background:linear-gradient(90deg,transparent,var(--accent) 12%,var(--accent) 88%,transparent);
+        box-shadow:0 0 22px 6px rgba(201,87,26,.28);opacity:0}
+  .beam::after{content:"";position:absolute;left:0;right:0;top:-46px;height:46px;
+        background:linear-gradient(180deg,rgba(201,87,26,0),rgba(201,87,26,.10))}
+
+  /* заголовок, «приклеенный» к листу */
+  .hero-copy{position:absolute;left:0;right:0;bottom:clamp(20px,6vh,64px);padding:0 24px;
+             text-align:center;pointer-events:none}
+  .hero-copy .eyebrow{font:600 12px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;
+             color:var(--accent);margin:0 0 14px}
+  .hero-copy h1{font-family:var(--serif);font-size:clamp(34px,7.2vw,72px);line-height:.98;
+             letter-spacing:-.02em;margin:0}
+  .hero-copy h1 span{display:inline-block;will-change:transform}
+  .hero-copy .sub{margin:16px auto 0;max-width:520px;color:var(--muted);font-size:clamp(14px,1.8vw,17px)}
+  .scroll-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;font-size:11px;
+             letter-spacing:.2em;text-transform:uppercase;color:#a2937c}
+
+  /* ---------- обычные секции ---------- */
+  section{padding:clamp(48px,8vw,96px) 0;border-top:1px solid var(--line)}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);margin:0 0 22px;letter-spacing:-.01em}
+  .lead{color:var(--muted);max-width:640px;margin:-8px 0 26px}
+  .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{margin:0 0 8px;font-size:17px}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  table.prices{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+        border-radius:14px;overflow:hidden}
+  table.prices th,table.prices td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);font-size:15px}
+  table.prices th{background:#f2e9d8;font-weight:600}
+  table.prices tr:last-child td{border-bottom:0}
+  table.prices td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .note{color:var(--muted);font-size:15px;margin-top:12px}
+  .cta{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+       padding:15px 24px;border-radius:11px;font-weight:600}
+  .cta:hover{background:#b04a14}
+  .contact{font-size:19px;line-height:1.9}
+  footer{padding:36px 0 64px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+
+  /* появление секций */
+  .fade{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+  .fade.in{opacity:1;transform:none}
+
+  /* телефон: своя хореография — без наклона, сканер идёт сверху вниз по вертикали */
+  @media (max-width:640px){
+    .hero{height:190vh}
+    .sheet{width:92vw;aspect-ratio:1/1.42;transform:none!important}
+    .hero-copy{bottom:16px}
+    .hero-copy h1{font-size:clamp(28px,10vw,44px)}
+    .hero-copy .sub{display:none}
+    .seal{display:none}
+    .scroll-hint{bottom:6px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hero{height:auto}
+    .stage{position:relative;height:auto;padding:96px 0 64px;display:block}
+    .sheet{margin:0 auto;transform:none!important}
+    .reveal{clip-path:none;opacity:0}
+    .beam{display:none}
+    .hero-copy{position:static;margin-top:28px}
+    .fade{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <div class="stage">
+    <div class="sheet" id="sheet" aria-hidden="true">
+      <div class="row mid"></div><div class="row"></div><div class="row short"></div>
+      <div class="row accentline"></div>
+      <div class="row"></div><div class="row mid"></div><div class="row"></div>
+      <div class="row short"></div>
+      <div class="seal">копия<br>верна</div>
+
+      <div class="reveal" id="reveal">
+        <div class="grid-table">
+          <div>Наименование</div><div>Кол-во</div><div>Сумма</div>
+          <div>Акт осмотра</div><div class="num">3</div><div class="num">1 200</div>
+          <div>Ведомость</div><div class="num">14</div><div class="num">5 600</div>
+          <div>Реестр</div><div class="num">28</div><div class="num">11 200</div>
+        </div>
+      </div>
+      <div class="beam" id="beam"></div>
+    </div>
+
+    <div class="hero-copy">
+      <p class="eyebrow">сканы → таблицы</p>
+      <h1><span id="w1">Бумага</span> <span id="w2">становится</span> <span id="w3">таблицей</span></h1>
+      <p class="sub">Сканы и фотографии — в Excel, Word и PDF. Данные сверяются по правилам, расхождения помечаются, а не теряются.</p>
+    </div>
+    <div class="scroll-hint">прокрутите</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section class="fade">
+  <h2>Что можно заказать</h2>
+  <p class="lead">Работаю с таблицами, ведомостями, реестрами, договорами и актами. Каждая страница проходит проверку до сдачи.</p>
+  <div class="cards">
+    <div class="card"><h3>Скан → Excel</h3><p>Числа, даты и номера сверяются по правилам, расхождения помечаются для проверки.</p></div>
+    <div class="card"><h3>Скан → Word</h3><p>Договоры, приказы, акты — с сохранением структуры и вёрстки.</p></div>
+    <div class="card"><h3>Архив целиком</h3><p>От 1 000 страниц: со скидкой и отчётом по каждой папке.</p></div>
+  </div>
+</section>
+
+<section class="fade">
+  <h2>Цены</h2>
+  <table class="prices">
+    <tr><th>Работа</th><th>Цена</th></tr>
+    <tr><td>Скан → PDF, постранично</td><td>10 ₽ / страница</td></tr>
+    <tr><td>Скан → Excel с проверкой</td><td>25 ₽ / страница</td></tr>
+    <tr><td>Скан → Word с вёрсткой</td><td>30 ₽ / страница</td></tr>
+    <tr><td>Срочно, за сутки</td><td>+50%</td></tr>
+    <tr><td>От 1 000 страниц</td><td>−20%</td></tr>
+  </table>
+  <p class="note">Минимальный заказ — 2 000 ₽. Первые 20 страниц бесплатно: качество видно на своих документах до оплаты.</p>
+</section>
+
+<section class="fade" id="contact">
+  <h2>Связаться</h2>
+  <p class="lead">Пришлите одну страницу — верну результат в тот же день, бесплатно.</p>
+  <p class="contact">
+    Телефон: <strong>+7 ___ ___-__-__</strong><br>
+    Telegram: <strong>@___</strong><br>
+    Почта: <strong>___@___</strong>
+  </p>
+  <p style="margin-top:22px"><a class="cta" href="mailto:___@___">Прислать документ на пробу</a></p>
+</section>
+
+<footer>
+  <p>Работаю с физическими и юридическими лицами. Документы не передаются третьим лицам и удаляются после сдачи работы.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var hero = document.getElementById('top');
+  var sheet = document.getElementById('sheet');
+  var reveal = document.getElementById('reveal');
+  var beam = document.getElementById('beam');
+  var words = [document.getElementById('w1'), document.getElementById('w2'), document.getElementById('w3')];
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var narrow = matchMedia('(max-width: 640px)');
+  var ticking = false;
+
+  function frame(){
+    ticking = false;
+    var h = hero.offsetHeight - innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, (scrollY - hero.offsetTop) / h)) : 1;
+    // лист: наклон выпрямляется, масштаб успокаивается
+    if (!reduce) {
+      var tilt = narrow.matches ? 0 : (-4 + 4 * p);
+      var scale = narrow.matches ? 1 : (1.07 - 0.07 * p);
+      sheet.style.transform = 'rotate(' + tilt.toFixed(3) + 'deg) scale(' + scale.toFixed(4) + ') translateY(' + ((0.5 - p) * 26).toFixed(2) + 'px)';
+    }
+    // сканер: 6% → 104%, гаснет на краях
+    var scan = 6 + p * 98;
+    reveal.style.setProperty('--scan', scan.toFixed(2) + '%');
+    beam.style.setProperty('--scan', scan.toFixed(2) + '%');
+    beam.style.opacity = String(Math.min(1, Math.min(p * 6, (1 - p) * 6)));
+    // слова едут вместе с листом, но с разной скоростью — «приклеены к поверхности»
+    if (!reduce) {
+      var speeds = narrow.matches ? [0, 0, 0] : [10, -22, 16];
+      for (var i = 0; i < 3; i++) {
+        words[i].style.transform = 'translate3d(0,' + (speedOf(i) * p).toFixed(2) + 'px,0)';
+      }
+    }
+    function speedOf(i){ return speeds ? speeds[i] : 0; }
+  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  narrow.addEventListener('change', onScroll);
+  frame();
+
+  // мягкое появление секций
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {rootMargin:'-8% 0px'});
+    document.querySelectorAll('.fade').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.fade').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
+</body>
+</html>
