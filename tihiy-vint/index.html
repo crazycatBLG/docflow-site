@@ -1234,12 +1234,17 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     }
     var btn = form.querySelector('button[type=submit]');
     btn.disabled = true; btn.textContent = 'Отправляем…';
+    ok.textContent = 'Отправляем заявку…';
+    ok.style.background = ''; ok.style.color = ''; ok.style.borderColor = '';
+    ok.classList.add('show');
     var data = new FormData(form);
     data.append('_subject', 'Заявка с сайта «Тихий винт»');
     data.append('_template', 'table');
     data.append('_captcha', 'false');
-    fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
-      .then(function(r){ return r.json(); })
+    var ctrl = new AbortController();
+    var timer = setTimeout(function(){ ctrl.abort(); }, 45000);
+    fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}, signal:ctrl.signal})
+      .then(function(r){ clearTimeout(timer); return r.json(); })
       .then(function(){
         ok.textContent = 'Спасибо, '+name+'! Заявка принята, мастер перезвонит в течение 15 минут.';
         ok.style.background = ''; ok.style.color = ''; ok.style.borderColor = '';
