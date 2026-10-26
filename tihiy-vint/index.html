@@ -515,7 +515,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       <a href="#calc">Калькулятор</a>
       <a href="#booking">Запись</a>
       <a href="#pricing">Цены</a>
-      <a href="#stories">Кейсы</a>
+      <a href="#cases">Кейсы</a>
     </nav>
     <div class="header-actions">
       <span class="viewers-badge" id="viewersBadge">Сейчас смотрят: 3</span>
@@ -628,11 +628,11 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     </div>
   </section>
 
-  <section id="stories" style="background:var(--bg-soft)">
+  <section id="cases" style="background:var(--bg-soft)">
     <div class="container">
       <h2 class="section-title reveal">Истории ремонтов</h2>
       <p class="section-lead reveal">Развёрнутые кейсы: что сломалось, что нашли и как чинили.</p>
-      <div class="stories" id="stories"></div>
+      <div class="stories" id="storiesList"></div>
     </div>
   </section>
 
@@ -690,11 +690,11 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     </div>
   </section>
 
-  <section id="parts" style="background:var(--bg-soft)">
+  <section id="spares" style="background:var(--bg-soft)">
     <div class="container">
       <h2 class="section-title reveal">Запчасти в наличии</h2>
       <p class="section-lead reveal">Расходники и частые детали — всегда на складе. Установим или продадим отдельно.</p>
-      <div class="parts" id="parts"></div>
+      <div class="parts" id="partsList"></div>
     </div>
   </section>
 
@@ -924,7 +924,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     { id:5, tag:'Холодильник', title:'Liebherr CN 4003 — не морозит морозилка', img:null, imgClass:'c2', imgText:'Холодильник<br>Liebherr', broken:'В холодильной камере +5 °C, в морозилке −8 °C вместо −18. Компрессор работает без остановки.', found:'Забит капиллярный фильтр-осушитель. Утечки фреона нет.', fixed:'Замена фильтр-осушителя, вакуумирование, заправка фреоном по весам, проверка термостата.', result:'Готов за 3 дня', price:'5 800 ₽', brief:'Замена фильтра и заправка' },
     { id:6, tag:'Винил', title:'Technics SL-1200 — нестабильная скорость', img:null, imgClass:'c3', imgText:'Виниловый<br>Technics', broken:'На 33⅓ оборотах диск периодически замедлялся, особенно на тяжёлых пластинках.', found:'Износ щёток двигателя и загрязнение контактов строба.', fixed:'Замена щёток, чистка стробоскопа, замена потенциометра, юстировка тонарма.', result:'Готов за 5 дней', price:'6 500 ₽', brief:'Замена щёток и профилактика' }
   ];
-  var storiesEl = document.getElementById('stories');
+  var storiesEl = document.getElementById('storiesList');
   stories.forEach(function(s){
     var card = document.createElement('div');
     card.className = 'story-card reveal';
@@ -1165,7 +1165,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     {cat:'Электроника', name:'Набор конденсаторов (470 мкФ)', price:'350 ₽'},
     {cat:'Кофемашины', name:'Уплотнители заварочного блока', price:'550 ₽'}
   ];
-  var partsEl = document.getElementById('parts');
+  var partsEl = document.getElementById('partsList');
   partsList.forEach(function(p){
     var div = document.createElement('div');
     div.className = 'part reveal';
