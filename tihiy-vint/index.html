@@ -522,7 +522,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       <button class="icon-btn" id="searchBtn" type="button" aria-label="Поиск по сайту">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
-      <a class="phone" href="tel:+74951234567"><span class="online-dot" title="Мастер сейчас на месте"></span>+7 (495) 123-45-67</a>
+      <a class="phone" href="#request"><span class="online-dot" title="Заявки принимаем круглосуточно"></span>Запись 24/7</a>
     </div>
   </div>
 </header>
@@ -532,21 +532,24 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
   <section class="hero">
     <div class="container hero-grid">
       <div class="reveal">
-        <span class="promo">−10% пенсионерам · бесплатная диагностика в будни</span>
-        <h1>Чиним технику тихо, точно <span>и&nbsp;надолго</span></h1>
-        <p class="hero-lead">Семейная мастерская в Москве с 2014 года. Возвращаем к жизни бытовую технику, электронику и ноутбуки — без спешки, навязанных услуг и лишних деталей в счёте.</p>
+        <span class="promo">Диагностика бесплатно в будни — до 12:00</span>
+        <h1>Ремонт техники за 1 день — <span>цена до начала работ</span></h1>
+        <p class="hero-lead">Мастерская в Москве с 2014 года: бытовая техника, электроника, ноутбуки. Называем цену после бесплатной диагностики и не меняем её потом. Не починили — денег не взяли.</p>
         <div class="hero-actions">
-          <a href="#request" class="btn btn-primary">Записаться на ремонт</a>
-          <a href="#calc" class="btn btn-secondary">Рассчитать стоимость</a>
-        </div>
-        <div class="stats">
-          <div class="stat"><b>12 лет</b><span>на рынке ремонта</span></div>
-          <div class="stat"><b>8&nbsp;400+</b><span>устройств починили</span></div>
-          <div class="stat"><b>98%</b><span>возвращаются снова</span></div>
+          <a href="#request" class="btn btn-primary">Записаться на диагностику</a>
+          <a href="#calc" class="btn btn-secondary">Узнать цену за 30 секунд</a>
         </div>
       </div>
       <div class="hero-photo reveal">
         <img src="https://i.ibb.co/mr3sX7Dy/shop.jpg" alt="Интерьер мастерской «Тихий винт»: верстаки, инструмент и стеллажи с техникой" width="1200" height="900">
+      </div>
+    </div>
+    <div class="container">
+      <div class="stats reveal">
+        <div class="stat"><b>12 лет</b><span>ремонтируем в Москве</span></div>
+        <div class="stat"><b>8&nbsp;400+</b><span>устройств починили</span></div>
+        <div class="stat"><b>98%</b><span>возвращаются снова</span></div>
+        <div class="stat"><b>1 день</b><span>типичный срок ремонта</span></div>
       </div>
     </div>
   </section>
@@ -575,7 +578,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     <div class="container">
       <h2 class="section-title reveal">Калькулятор стоимости</h2>
       <p class="section-lead reveal">Узнайте ориентировочную цену и срок ремонта за 30 секунд.</p>
-      <div class="calc reveal" id="calc">
+      <div class="calc reveal">
         <div class="calc-steps">
           <div class="calc-step">
             <div class="calc-step-head"><div class="calc-step-num">1</div>Тип техники</div>
@@ -737,7 +740,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       <h2 class="section-title reveal">Оставить заявку</h2>
       <p class="section-lead reveal">Заполните короткую форму — перезвоним в течение 15 минут.</p>
       <div class="form-wrap reveal">
-        <form id="requestForm" action="https://formsubmit.co/your@email.com" method="POST" novalidate>
+        <form id="requestForm" action="https://formsubmit.co/ajax/fominignatBLG@gmail.com" method="POST" novalidate>
           <input type="hidden" name="_subject" value="Новая заявка с сайта «Тихий винт»">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">
@@ -784,7 +787,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       <div><h4>Тихий винт</h4><p>Мастерская по ремонту техники в Москве. Работаем с 2014 года.</p></div>
       <div><h4>Адрес</h4><p>Москва, ул. Винтовая, 12<br>вход со двора, 2 этаж</p></div>
       <div><h4>Часы работы</h4><p>Ежедневно с 10:00 до 20:00</p></div>
-      <div><h4>Контакты</h4><p><a href="tel:+74951234567">+7 (495) 123-45-67</a><br>hello@tihiy-vint.ru</p></div>
+      <div><h4>Контакты</h4><p><a href="#request">Заявка через форму</a><br>Москва, ул. Мастеровая, 12</p></div>
     </div>
     <div class="copy">
       <span>© 2014–2026 Мастерская «Тихий винт». Все права защищены.</span>
@@ -1148,7 +1151,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       '<div class="row"><span>Статус:</span><b style="color:'+(active?'#4caf50':'#b85a4a')+'">'+(active?'✓ Гарантия активна':'Гарантия истекла')+'</b></div>'+
       '<div class="warranty-actions">'+
         '<a href="#request" class="btn btn-secondary" data-issue="Гарантийный случай по заявке '+val+'">Сообщить о поломке</a>'+
-        '<a href="tel:+74951234567" class="btn btn-primary">Позвонить мастеру</a>'+
+        '<a href="#request" class="btn btn-primary">Оставить заявку</a>'+
       '</div></div>';
     res.classList.add('show');
   });
@@ -1219,26 +1222,36 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
   var form = document.getElementById('requestForm');
   var ok = document.getElementById('formOk');
   form.addEventListener('submit', function(ev){
+    ev.preventDefault();
     var name = form.name.value.trim();
     var phone = form.phone.value.trim();
     var issue = form.issue.value.trim();
     if (!name || !phone || !issue) {
-      ev.preventDefault();
       ok.textContent = 'Пожалуйста, заполните все поля.';
       ok.style.background = '#fbe9e7'; ok.style.color = '#8a2a1e'; ok.style.borderColor = '#eab9b0';
       ok.classList.add('show');
       return;
     }
-    if (form.action.indexOf('your@email.com') !== -1) {
-      ev.preventDefault();
-      ok.textContent = 'Спасибо, '+name+'! Заявка принята, мастер перезвонит в течение 15 минут. (Демо: настройте action на реальный email.)';
-      ok.style.background = ''; ok.style.color = ''; ok.style.borderColor = '';
-      ok.classList.add('show');
-      form.reset();
-      return;
-    }
-    ok.textContent = 'Спасибо, '+name+'! Заявка отправлена.';
-    ok.classList.add('show');
+    var btn = form.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'Отправляем…';
+    var data = new FormData(form);
+    data.append('_subject', 'Заявка с сайта «Тихий винт»');
+    data.append('_template', 'table');
+    data.append('_captcha', 'false');
+    fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
+      .then(function(r){ return r.json(); })
+      .then(function(){
+        ok.textContent = 'Спасибо, '+name+'! Заявка принята, мастер перезвонит в течение 15 минут.';
+        ok.style.background = ''; ok.style.color = ''; ok.style.borderColor = '';
+        ok.classList.add('show');
+        form.reset();
+      })
+      .catch(function(){
+        ok.textContent = 'Не удалось отправить. Позвоните или напишите ещё раз через минуту.';
+        ok.style.background = '#fbe9e7'; ok.style.color = '#8a2a1e'; ok.style.borderColor = '#eab9b0';
+        ok.classList.add('show');
+      })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Отправить заявку'; });
   });
 
   var phone = document.getElementById('phone');
