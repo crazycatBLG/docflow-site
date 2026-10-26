@@ -118,7 +118,8 @@ footer{border-top:1px solid var(--line);margin-top:26px;padding:20px 0;color:var
           <p class="sub">Перезвоним в течение 15 минут в рабочее время и скажем, сколько будет стоить ремонт.</p>
           <p class="sub" style="margin-bottom:0">Москва, ул. Мастеровая, 12<br>Пн–Сб 10:00–20:00, Вс 11:00–17:00</p>
         </div>
-        <form id="requestForm" action="https://formsubmit.co/ajax/fominignatBLG@gmail.com" method="POST" novalidate>
+        <form id="requestForm" action="https://hermes-agent-server.tail9bcb11.ts.net/lead" method="POST" novalidate>
+          <input type="hidden" name="source" value="lite">
           <div><label for="name">Как к вам обращаться</label><input id="name" name="name" type="text" autocomplete="name" required></div>
           <div><label for="phone">Телефон</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
           <div><label for="issue">Что случилось</label><textarea id="issue" name="issue" required></textarea></div>
@@ -151,15 +152,15 @@ footer{border-top:1px solid var(--line);margin-top:26px;padding:20px 0;color:var
     btn.disabled = true; btn.textContent = 'Отправляем…';
     ok.textContent = 'Отправляем заявку…';
     ok.classList.add('show');
-    var data = new FormData(form);
-    data.append('_subject','Заявка с сайта «Тихий винт» (лёгкая версия)');
-    data.append('_template','table');
-    data.append('_captcha','false');
+    var payload = JSON.stringify({name:name, phone:phone, issue:issue, source:'lite'});
     var ctrl = new AbortController();
     var timer = setTimeout(function(){ ctrl.abort(); }, 45000);
-    fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}, signal:ctrl.signal})
+    fetch(form.action, {method:'POST', body:payload, headers:{'Content-Type':'application/json','Accept':'application/json'}, signal:ctrl.signal})
       .then(function(r){ clearTimeout(timer); return r.json(); })
-      .then(function(){
+      .then(function(res){
+        if (!res || res.ok !== true) {
+          throw new Error((res && res.error) || 'сервер не подтвердил приём');
+        }
         ok.textContent = 'Спасибо, ' + name + '! Заявка принята, перезвоним в течение 15 минут.';
         ok.classList.add('show');
         form.reset();
