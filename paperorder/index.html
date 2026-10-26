@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Порядок в бумагах — документы без ручной рутины</title>
+<meta name="description" content="Собираем документы по шаблонам из вашей таблицы: без ручного копирования, с проверкой полей и сверкой сумм. Для небольших отделов и частной практики.">
+<meta property="og:title" content="Порядок в бумагах — документы без ручной рутины">
+<meta property="og:description" content="Шаблоны, автозаполнение и сверка: пакет документов за минуты вместо вечера.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231e5b46'/><path d='M28 30h44M28 50h44M28 70h28' stroke='%23faf7f2' stroke-width='8' stroke-linecap='round'/></svg>">
+<style>
+  :root{
+    --paper:#faf7f2; --paper-2:#f2ece2; --ink:#191817; --ink-2:#4a4643;
+    --line:#ddd4c6; --accent:#1e5b46; --accent-2:#2f7a5f; --sand:#e8dfd0;
+    --max:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:400 17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif; font-weight:400; letter-spacing:-.01em; margin:0}
+  p{margin:0}
+  a{color:inherit}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:600}
+  .muted{color:var(--ink-2)}
+
+  header{position:sticky; top:0; z-index:20; backdrop-filter:saturate(140%) blur(8px);
+    background:color-mix(in srgb, var(--paper) 86%, transparent); border-bottom:1px solid var(--line)}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:66px}
+  .brand{display:flex; align-items:center; gap:10px; font-family:Georgia,serif; font-size:19px; text-decoration:none}
+  .brand span.dot{width:9px; height:9px; border-radius:50%; background:var(--accent); display:inline-block}
+  .nav-links{display:flex; gap:26px; font-size:15px}
+  .nav-links a{text-decoration:none; color:var(--ink-2); padding-bottom:2px; border-bottom:1px solid transparent}
+  .nav-links a:hover{color:var(--ink); border-color:var(--accent)}
+  .btn{display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:999px;
+    background:var(--accent); color:#fff; text-decoration:none; font-size:15px; font-weight:600;
+    border:1px solid var(--accent); transition:transform .18s ease, background .18s ease}
+  .btn:hover{background:var(--accent-2); transform:translateY(-1px)}
+  .btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--accent); color:var(--accent); background:transparent}
+  @media (max-width:760px){ .nav-links{display:none} }
+
+  .hero{padding:88px 0 64px; position:relative; overflow:hidden}
+  .hero:before{content:""; position:absolute; inset:auto -20% 30% 40%; height:520px;
+    background:radial-gradient(circle at 60% 40%, rgba(30,91,70,.10), transparent 62%); pointer-events:none}
+  .hero h1{font-size:clamp(38px,6vw,68px); line-height:1.05; max-width:16ch}
+  .hero .lead{margin-top:22px; font-size:clamp(17px,2.1vw,20px); color:var(--ink-2); max-width:52ch}
+  .hero-actions{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap}
+  .proof{display:flex; gap:34px; margin-top:52px; flex-wrap:wrap}
+  .proof div{min-width:140px}
+  .proof b{display:block; font-family:Georgia,serif; font-size:32px; line-height:1.1}
+  .proof span{font-size:13.5px; color:var(--ink-2)}
+
+  section{padding:76px 0; border-top:1px solid var(--line)}
+  .sec-head{max-width:56ch}
+  .sec-head h2{font-size:clamp(26px,3.6vw,40px); line-height:1.15; margin-top:12px}
+  .grid{display:grid; gap:20px; margin-top:40px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:860px){ .g3,.g2{grid-template-columns:1fr} }
+
+  .card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px}
+  .card h3{font-size:20px; margin-bottom:8px}
+  .card p{font-size:15.5px; color:var(--ink-2)}
+  .num{display:inline-flex; width:32px; height:32px; align-items:center; justify-content:center;
+    border-radius:50%; background:var(--sand); color:var(--accent); font-size:14px; font-weight:700; margin-bottom:14px}
+
+  .pain{border-left:2px solid var(--accent); padding-left:18px}
+  .pain h3{font-size:19px}
+  .pain p{font-size:15.5px; color:var(--ink-2); margin-top:6px}
+
+  .steps{counter-reset:s; display:grid; gap:0; margin-top:40px}
+  .step{display:grid; grid-template-columns:64px 1fr; gap:18px; padding:24px 0; border-top:1px solid var(--line)}
+  .step:last-child{border-bottom:1px solid var(--line)}
+  .step b{font-family:Georgia,serif; font-size:26px; color:var(--accent)}
+  .step h3{font-size:19px; margin-bottom:6px}
+  .step p{font-size:15.5px; color:var(--ink-2)}
+
+  .price{display:flex; flex-direction:column; gap:16px}
+  .price .sum{font-family:Georgia,serif; font-size:34px; line-height:1}
+  .price ul{list-style:none; padding:0; margin:6px 0 0; font-size:15px; color:var(--ink-2)}
+  .price li{padding-left:20px; position:relative; margin:7px 0}
+  .price li:before{content:""; position:absolute; left:0; top:.55em; width:9px; height:9px;
+    border-radius:2px; background:var(--accent); opacity:.75}
+  .price.hot{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .price.hot li, .price.hot p{color:rgba(255,255,255,.86)}
+  .price.hot li:before{background:#fff}
+  .price.hot .btn{background:#fff; color:var(--accent); border-color:#fff}
+  .price.hot .btn:hover{background:var(--sand)}
+
+  details{border-top:1px solid var(--line); padding:18px 0}
+  details summary{cursor:pointer; font-size:17px; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:16px}
+  details summary::-webkit-details-marker{display:none}
+  details summary:after{content:"+"; color:var(--accent); font-weight:400; font-size:22px; line-height:1}
+  details[open] summary:after{content:"–"}
+  details p{margin-top:12px; font-size:15.5px; color:var(--ink-2); max-width:70ch}
+
+  .cta{background:var(--paper-2); border-top:1px solid var(--line)}
+  .cta-inner{display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center}
+  @media (max-width:860px){ .cta-inner{grid-template-columns:1fr} }
+  form{display:grid; gap:12px}
+  label{font-size:13px; color:var(--ink-2)}
+  input,textarea{width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    background:#fff; font:inherit; font-size:15px}
+  input:focus,textarea:focus{outline:2px solid rgba(30,91,70,.35); border-color:var(--accent)}
+  .hint{font-size:12.5px; color:var(--ink-2)}
+
+  footer{padding:40px 0; font-size:14px; color:var(--ink-2)}
+  .foot{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap}
+
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1; transform:none; transition:none}
+    .btn:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="dot"></span>Порядок в бумагах</a>
+    <nav class="nav-links">
+      <a href="#pain">Задача</a>
+      <a href="#how">Как работает</a>
+      <a href="#price">Стоимость</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <a class="btn" href="#contact">Показать на своих документах</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <p class="eyebrow">Документы · шаблоны · сверка</p>
+    <h1>Пакет документов за минуты, а не за вечер</h1>
+    <p class="lead">Вы ведёте таблицу, у вас есть шаблоны. Мы связываем их: данные подставляются сами, поля проверяются по правилам, суммы сходятся. Руками — только подпись.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#contact">Показать на своих документах</a>
+      <a class="btn ghost" href="#how">Как это устроено</a>
+    </div>
+    <div class="proof">
+      <div><b>40 → 3 мин</b><span>на документ по шаблону</span></div>
+      <div><b>0</b><span>перепечатанных фамилий и сумм</span></div>
+      <div><b>1 вечер</b><span>на запуск первого шаблона</span></div>
+    </div>
+  </div>
+
+  <section id="pain">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Знакомо</p>
+        <h2>Рутина, которая съедает вечера</h2>
+      </div>
+      <div class="grid g3">
+        <div class="pain reveal"><h3>Копирование из таблицы</h3><p>Двадцать строк, десять шаблонов — и каждое поле вставлено вручную. Одна опечатка в фамилии, и документ переделывать.</p></div>
+        <div class="pain reveal"><h3>Суммы не сходятся</h3><p>Цифры в тексте, в таблице и в приложении живут отдельно. Расхождение всплывает на проверке, когда сроки уже поджали.</p></div>
+        <div class="pain reveal"><h3>Пакет собирается руками</h3><p>Печать, подпись, сканы, имена файлов. Половина работы — не содержание, а раскладывание по папкам.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Как работает</p>
+        <h2>Три шага, без установки серверов</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><b>01</b><div><h3>Берём ваши шаблоны как есть</h3><p>Word и Excel остаются вашими. Мы размечаем, куда какие данные идут, и что должно сойтись.</p></div></div>
+        <div class="step reveal"><b>02</b><div><h3>Собираем по таблице</h3><p>Одна строка — один документ. Ошибки ловятся до печати: пустое поле, сумма прописью, дата вне периода.</p></div></div>
+        <div class="step reveal"><b>03</b><div><h3>Отдаём готовый пакет</h3><p>Файлы с понятными именами, приложения на месте, журнал собранного — чтобы через месяц найти, что и когда делали.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="price">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Стоимость</p>
+        <h2>Платите за результат, не за подписку</h2>
+      </div>
+      <div class="grid g3">
+        <div class="card price reveal">
+          <p class="eyebrow">Проба</p>
+          <div class="sum">0 ₽</div>
+          <p class="muted">Один ваш шаблон и десять строк из таблицы — чтобы увидеть результат на своих данных.</p>
+          <ul><li>Разбор одного шаблона</li><li>Сборка десяти документов</li><li>Отчёт о найденных расхождениях</li></ul>
+          <a class="btn ghost" href="#contact">Начать с пробы</a>
+        </div>
+        <div class="card price hot reveal">
+          <p class="eyebrow" style="color:#cfe6da">Рабочий комплект</p>
+          <div class="sum">от 18 000 ₽</div>
+          <p>До пяти шаблонов, автозаполнение, проверки полей и сумм, сборка пакета.</p>
+          <ul><li>До 5 шаблонов</li><li>Проверка дат, сумм, обязательных полей</li><li>Пакет файлов и журнал сборки</li><li>Правки в течение месяца</li></ul>
+          <a class="btn" href="#contact">Обсудить комплект</a>
+        </div>
+        <div class="card price reveal">
+          <p class="eyebrow">Под ключ</p>
+          <div class="sum">по задаче</div>
+          <p>Много шаблонов, свои правила проверки, обучение сотрудников, сопровождение.</p>
+          <ul><li>Неограниченно шаблонов</li><li>Свои правила и справочники</li><li>Обучение и инструкция</li><li>Сопровождение по договору</li></ul>
+          <a class="btn ghost" href="#contact">Считать задачу</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Вопросы</p>
+        <h2>Что обычно спрашивают</h2>
+      </div>
+      <div style="margin-top:32px">
+        <details><summary>Данные уходят куда-то наружу?</summary><p>Нет. Обработка идёт на вашем компьютере или в вашей сети. Мы не отправляем содержимое документов во внешние сервисы и не храним копии у себя.</p></details>
+        <details><summary>У нас старый Word и таблицы с макросами</summary><p>Это нормальный случай. Шаблон остаётся в вашем файле, мы работаем с копией и не ломаем макросы. После сборки сверяем результат с исходником.</p></details>
+        <details><summary>Сколько времени занимает запуск</summary><p>Первый шаблон — один вечер, включая разбор ваших правил. Дальше шаблоны добавляются быстрее: механика та же.</p></details>
+        <details><summary>А если правила поменяются</summary><p>Правила живут отдельно от шаблона: меняется формулировка или срок — правим правило, документы собираются по-новому без переделки файлов.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="wrap cta-inner">
+      <div>
+        <p class="eyebrow">Проба</p>
+        <h2 style="font-size:clamp(26px,3.4vw,38px); line-height:1.15; margin-top:12px">Пришлите один шаблон и десять строк</h2>
+        <p class="muted" style="margin-top:14px; max-width:44ch">Вернём собранные документы и список мест, где данные не сошлись. Без обязательств и без доступа к вашим системам.</p>
+      </div>
+      <form action="mailto:hello@paperorder.example" method="post" enctype="text/plain">
+        <div><label for="n">Как вас зовут</label><input id="n" name="name" autocomplete="name" required></div>
+        <div><label for="e">Почта для ответа</label><input id="e" name="email" type="email" autocomplete="email" required></div>
+        <div><label for="m">Что за документы</label><textarea id="m" name="message" rows="3" placeholder="Например: постановления по одному шаблону, данные в Excel"></textarea></div>
+        <button class="btn" type="submit" style="justify-content:center">Отправить заявку</button>
+        <p class="hint">Отвечаем в рабочий день. Форма откроет вашу почтовую программу — это демонстрационная страница.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Порядок в бумагах. Демонстрационная страница.</span>
+    <span>Сделано по одному промпту · без внешних библиотек</span>
+  </div>
+</footer>
+
+<script>
+  const items = document.querySelectorAll('.reveal');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    items.forEach((el) => io.observe(el));
+  } else {
+    items.forEach((el) => el.classList.add('in'));
+  }
+</script>
+</body>
+</html>
