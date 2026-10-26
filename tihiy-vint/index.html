@@ -1,976 +1,1260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тихий винт — мастерская по ремонту техники</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Тихий винт — мастерская по ремонту техники в Москве</title>
+<meta name="description" content="Мастерская «Тихий винт» в Москве с 2014 года. Ремонт бытовой техники, электроники и ноутбуков. Гарантия, фиксированные цены.">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+:root{
+  --bg:#f7f2ea;--bg-soft:#efe7d9;--ink:#1c231f;--ink-soft:#4a524c;
+  --accent:#2d4a3a;--accent-2:#3e6651;--line:#d9d2c2;--white:#fffdf8;
+  --shadow:0 6px 24px -12px rgba(30,40,35,.18);
+  --radius:14px;--maxw:1200px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1a201c;--bg-soft:#232b25;--ink:#e8e6df;--ink-soft:#b8bcb6;
+    --accent:#5a8268;--accent-2:#6fa184;--line:#3a443c;--white:#242c26;
+    --shadow:0 6px 24px -12px rgba(0,0,0,.4);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--ink);
+  font-size:clamp(15px,1.02vw,17px);line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body.modal-open{overflow:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-weight:700;line-height:1.15;color:var(--accent);margin:0}
+h1{font-size:clamp(30px,4.2vw,58px);letter-spacing:-.02em}
+h2{font-size:clamp(26px,3vw,42px);letter-spacing:-.015em}
+h3{font-size:clamp(19px,1.4vw,24px)}
+p{margin:0}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,3vw,32px)}
 
-  :root {
-    --bg: #F5F1E8;
-    --bg-soft: #EDE6D3;
-    --ink: #1F2A24;
-    --ink-soft: #5A665E;
-    --accent: #2F4F3F;
-    --accent-dark: #1F3A2E;
-    --line: #D9D2BF;
-  }
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+  padding:.95em 1.4em;border-radius:999px;
+  font:inherit;font-weight:600;letter-spacing:.01em;
+  border:2px solid transparent;cursor:pointer;
+  transition:background .25s ease,color .25s ease,border-color .25s ease,transform .25s ease;
+  text-align:center;
+}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-2)}
+.btn-secondary{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn-secondary:hover{background:var(--accent);color:var(--white)}
+.btn:active{transform:translateY(1px)}
 
-  html { scroll-behavior: smooth; }
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.is-visible{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .wa-float,.tracker-status .dot{animation:none !important}
+}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
+/* Header */
+header.site{
+  position:sticky;top:0;z-index:30;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:saturate(1.2) blur(8px);
+}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,32px);padding:14px 0;flex-wrap:wrap}
+.logo{
+  font-weight:800;font-size:clamp(20px,1.6vw,24px);
+  color:var(--accent);letter-spacing:-.01em;white-space:nowrap;
+  display:flex;align-items:center;gap:.5em;
+}
+.logo::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--accent);display:inline-block}
+.menu{display:flex;gap:clamp(12px,1.4vw,22px);flex:1;justify-content:center}
+.menu a{color:var(--ink-soft);font-weight:500;font-size:.92em}
+.menu a:hover{color:var(--accent)}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--white);border:1px solid var(--line);
+  display:grid;place-items:center;cursor:pointer;
+  transition:all .2s ease;
+}
+.icon-btn:hover{border-color:var(--accent);background:var(--bg-soft)}
+.icon-btn svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2}
+.phone{color:var(--accent);font-weight:600;white-space:nowrap;font-size:.95em}
+.online-dot{
+  display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:#4caf50;margin-right:5px;
+  animation:onlineBlink 2.2s ease infinite;
+}
+@keyframes onlineBlink{0%,100%{opacity:1}50%{opacity:.5}}
+.viewers-badge{
+  background:var(--bg-soft);border:1px solid var(--line);
+  padding:4px 10px;border-radius:999px;font-size:.82em;color:var(--ink-soft);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.viewers-badge::before{content:"●";color:#d9a54a;font-size:.7em}
+@media (max-width:820px){
+  .menu{display:none}
+  .phone{font-size:.85em}
+  .viewers-badge{display:none}
+}
 
-  .wrap {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
+/* Hero */
+.hero{padding:clamp(40px,7vw,96px) 0 clamp(48px,8vw,112px)}
+.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,5vw,72px);align-items:center}
+.hero h1 span{color:var(--accent-2)}
+.promo{
+  display:inline-block;margin-bottom:18px;
+  background:var(--accent);color:var(--bg);
+  padding:6px 14px;border-radius:999px;font-size:.85em;font-weight:600;
+}
+.hero-lead{margin-top:clamp(14px,1.8vw,22px);font-size:clamp(16px,1.2vw,20px);color:var(--ink-soft);max-width:54ch}
+.hero-actions{margin-top:clamp(20px,2.6vw,32px);display:flex;flex-wrap:wrap;gap:12px}
+.stats{margin-top:clamp(28px,3.6vw,44px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.6vw,18px);max-width:640px}
+.stat{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(12px,1.5vw,18px)}
+.stat b{display:block;color:var(--accent);font-size:clamp(22px,2vw,30px);font-weight:800;line-height:1.1}
+.stat span{color:var(--ink-soft);font-size:.9em}
+.hero-photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--bg-soft);aspect-ratio:4/3}
+.hero-photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3}
+@media (max-width:820px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-photo{order:-1;aspect-ratio:16/10}
+}
+@media (max-width:480px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stats .stat:last-child{grid-column:1 / -1}
+}
 
-  /* ---------- HEADER ---------- */
-  header.nav {
-    padding: 22px 0;
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: -0.01em;
-  }
-  .logo svg { flex-shrink: 0; }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-size: 15px;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-phone {
-    color: var(--accent-dark);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-  }
-  @media (max-width: 720px) {
-    .nav-links { display: none; }
-  }
+section{padding:clamp(56px,8vw,112px) 0}
+.section-title{margin-bottom:10px}
+.section-lead{color:var(--ink-soft);max-width:64ch;font-size:clamp(15px,1.1vw,18px);margin-bottom:clamp(28px,4vw,52px)}
+.section-lead.center{margin-left:auto;margin-right:auto;text-align:center}
 
-  /* ---------- HERO ---------- */
-  .hero {
-    padding: 90px 0 110px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-  .eyebrow {
-    display: inline-block;
-    background: var(--bg-soft);
-    color: var(--accent-dark);
-    padding: 8px 16px;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 28px;
-    border: 1px solid var(--line);
-  }
-  h1 {
-    font-size: clamp(40px, 6vw, 72px);
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    font-weight: 700;
-    margin-bottom: 24px;
-  }
-  h1 .accent { color: var(--accent); font-style: italic; font-weight: 500; }
-  .hero p.lead {
-    font-size: 19px;
-    color: var(--ink-soft);
-    max-width: 520px;
-    margin-bottom: 36px;
-  }
-  .cta-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 32px;
-    border-radius: 999px;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: transform .15s, background .2s, color .2s;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #F5F1E8;
-  }
-  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--line);
-  }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+/* Booking */
+.booking{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,3vw,34px)}
+.booking-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:clamp(14px,2vw,20px)}
+.booking-day{
+  padding:10px 6px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg);cursor:pointer;text-align:center;
+  font-family:inherit;font-size:.88em;transition:all .2s ease;
+}
+.booking-day small{display:block;font-size:.75em;color:var(--ink-soft);margin-bottom:2px}
+.booking-day b{display:block;font-size:1.15em;color:var(--ink)}
+.booking-day:hover{border-color:var(--accent-2)}
+.booking-day.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.booking-day.active b,.booking-day.active small{color:var(--white)}
+.booking-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:clamp(16px,2.4vw,24px)}
+.slot{
+  padding:10px;border-radius:8px;border:1px solid var(--line);
+  background:var(--bg);cursor:pointer;font-family:inherit;font-size:.9em;
+  transition:all .2s ease;text-align:center;
+}
+.slot:hover{border-color:var(--accent-2)}
+.slot.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.slot.taken{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.booking-service{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);font:inherit;color:var(--ink);margin-bottom:clamp(14px,2vw,20px);
+}
+.booking-confirm{
+  background:var(--bg-soft);border-radius:12px;padding:clamp(16px,2.4vw,22px);
+  display:none;
+}
+.booking-confirm.show{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.booking-confirm .info{font-size:.95em}
+.booking-confirm .info b{color:var(--accent)}
+@media (max-width:620px){
+  .booking-days{grid-template-columns:repeat(4,1fr)}
+  .booking-slots{grid-template-columns:repeat(3,1fr)}
+}
 
-  .hero-visual {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    background: var(--bg-soft);
-    border-radius: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--line);
-  }
-  .hero-visual::before {
-    content: "";
-    position: absolute;
-    inset: -20px;
-    border: 1px dashed var(--line);
-    border-radius: 36px;
-    pointer-events: none;
-  }
+/* Services */
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px)}
+.card{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;gap:10px;
+  transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c7bfad}
+.card .tag{
+  display:inline-block;background:var(--bg-soft);color:var(--accent);
+  font-size:.8em;font-weight:600;padding:4px 10px;border-radius:999px;align-self:flex-start;
+  letter-spacing:.02em;text-transform:uppercase;
+}
+.card p{color:var(--ink-soft)}
+.card .price{margin-top:auto;padding-top:14px;color:var(--accent);font-weight:700;font-size:1.15em}
+@media (max-width:900px){.services{grid-template-columns:1fr}}
 
-  .hero-photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 28px;
-    display: block;
-  }
-  .photo-band {
-    max-width: 1060px;
-    margin: 56px auto 0;
-    padding: 0 24px;
-  }
-  .photo-band img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 20px;
-    display: block;
-    border: 1px solid var(--line);
-  }
-  .photo-band figcaption {
-    margin-top: 12px;
-    font-size: 14px;
-    color: var(--muted);
-    text-align: center;
-  }
-  .credit { font-size: 13px; color: var(--muted); }
+.not-repair{
+  background:var(--bg-soft);border:1px dashed var(--line);border-radius:var(--radius);
+  padding:clamp(20px,2.4vw,30px);margin-top:clamp(24px,3vw,36px);
+  display:grid;grid-template-columns:auto 1fr;gap:clamp(14px,2vw,22px);align-items:flex-start;
+}
+.not-repair .icon{
+  flex:0 0 auto;width:48px;height:48px;border-radius:50%;
+  background:var(--white);border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--accent);font-size:1.4em;font-weight:800;
+}
+.not-repair h3{margin-bottom:8px}
+.not-repair ul{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 14px}
+.not-repair li{color:var(--ink-soft);font-size:.95em;padding-left:20px;position:relative}
+.not-repair li::before{content:"×";position:absolute;left:0;color:#b85a4a;font-weight:700}
 
-  .hero-stats {
-    display: flex;
-    gap: 40px;
-    margin-top: 56px;
-    padding-top: 32px;
-    border-top: 1px solid var(--line);
-    max-width: 520px;
-  }
-  .stat strong {
-    display: block;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    letter-spacing: -0.02em;
-  }
-  .stat span {
-    font-size: 14px;
-    color: var(--ink-soft);
-  }
+/* Calculator */
+.calc{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3vw,36px)}
+.calc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);align-items:start}
+.calc-step{display:flex;flex-direction:column;gap:10px}
+.calc-step-head{display:flex;align-items:center;gap:10px;font-size:.88em;color:var(--ink-soft);font-weight:500}
+.calc-step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--white);display:grid;place-items:center;font-weight:700;font-size:.85em}
+.calc-cats{display:flex;flex-direction:column;gap:8px}
+.calc-cat{
+  padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);cursor:pointer;font-weight:500;font-size:.95em;color:var(--ink);
+  transition:all .2s ease;text-align:left;font-family:inherit;
+}
+.calc-cat:hover{border-color:var(--accent-2);background:var(--bg-soft)}
+.calc-cat.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.calc select{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:inherit;color:var(--ink);cursor:pointer}
+.calc select:focus{outline:none;border-color:var(--accent)}
+.calc select:disabled{opacity:.5;cursor:not-allowed}
+.calc-result{margin-top:clamp(20px,3vw,32px);padding:clamp(18px,2.4vw,26px);background:var(--bg-soft);border-radius:12px;display:none}
+.calc-result.show{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+.calc-result-price{font-size:clamp(24px,2.2vw,32px);font-weight:800;color:var(--accent);line-height:1.1}
+.calc-result-price small{font-size:.45em;color:var(--ink-soft);font-weight:500;display:block;margin-top:4px}
+.calc-result-desc{color:var(--ink-soft);font-size:.94em;margin-top:6px}
+.calc-empty{text-align:center;padding:clamp(14px,2vw,20px);color:var(--ink-soft);font-size:.94em}
+@media (max-width:820px){
+  .calc-steps{grid-template-columns:1fr}
+  .calc-result.show{grid-template-columns:1fr;text-align:center}
+}
 
-  @media (max-width: 860px) {
-    .hero { padding: 60px 0 80px; }
-    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-visual { max-width: 420px; margin: 0 auto; }
-    .hero-stats { gap: 24px; }
-  }
+/* Stories */
+.stories{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,22px)}
+.story-card{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+  transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;
+}
+.story-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c7bfad}
+.story-ph{aspect-ratio:4/3;overflow:hidden;background:var(--bg-soft)}
+.story-ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.story-card:hover .story-ph img{transform:scale(1.04)}
+.story-ph-css{width:100%;height:100%;display:grid;place-items:center;color:#fff;font-weight:700;letter-spacing:.04em;font-size:.95em;text-transform:uppercase;text-align:center;padding:18px}
+.story-ph-css.c1{background:linear-gradient(135deg,#3e6651,#2d4a3a)}
+.story-ph-css.c2{background:linear-gradient(135deg,#8ba998,#3e6651)}
+.story-ph-css.c3{background:linear-gradient(135deg,#c9a875,#8a6f4a)}
+.story-body{padding:clamp(14px,2vw,20px);display:flex;flex-direction:column;gap:6px;flex:1}
+.story-body .tag{display:inline-block;background:var(--bg-soft);color:var(--accent);font-size:.75em;font-weight:600;padding:3px 9px;border-radius:999px;align-self:flex-start;letter-spacing:.02em;text-transform:uppercase}
+.story-body h3{margin:4px 0}
+.story-body p{color:var(--ink-soft);font-size:.92em;margin:0}
+.story-meta{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--accent);font-weight:600}
+@media (max-width:900px){.stories{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.stories{grid-template-columns:1fr}}
 
-  /* ---------- SECTIONS ---------- */
-  section { padding: 100px 0; }
-  .section-head {
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto 64px;
-  }
-  .section-head .eyebrow { margin-bottom: 20px; }
-  h2 {
-    font-size: clamp(32px, 4.5vw, 52px);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    font-weight: 700;
-    margin-bottom: 18px;
-  }
-  .section-head p {
-    color: var(--ink-soft);
-    font-size: 17px;
-  }
+/* Warranty check */
+.warranty{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,3vw,34px);max-width:760px;margin:0 auto}
+.warranty-form{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.warranty-form input{
+  flex:1 1 220px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);font:inherit;color:var(--ink);text-transform:uppercase;font-weight:600;
+}
+.warranty-result{display:none}
+.warranty-result.show{display:block}
+.warranty-ticket{
+  background:var(--bg-soft);border-radius:12px;padding:clamp(16px,2.4vw,22px);
+  display:grid;gap:12px;
+}
+.warranty-ticket h3{margin:0}
+.warranty-ticket .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.94em}
+.warranty-ticket .row b{color:var(--accent)}
+.warranty-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
-  /* ---------- SERVICES ---------- */
-  .services {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .card {
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 36px 32px;
-    transition: transform .2s, box-shadow .2s;
-  }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px -20px rgba(31, 58, 46, 0.15);
-  }
-  .card-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 24px;
-  }
-  .card h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-    letter-spacing: -0.01em;
-  }
-  .card p {
-    color: var(--ink-soft);
-    font-size: 15px;
-    margin-bottom: 20px;
-  }
-  .card-price {
-    font-size: 14px;
-    color: var(--accent-dark);
-    font-weight: 600;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-  }
-  @media (max-width: 860px) {
-    .grid-3 { grid-template-columns: 1fr; }
-  }
+/* Subscription */
+.subscription{
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;border-radius:var(--radius);
+  padding:clamp(28px,4vw,44px);
+  display:grid;grid-template-columns:1fr auto;gap:clamp(20px,3vw,40px);align-items:center;
+}
+.subscription h2{color:#fff;margin-bottom:10px}
+.subscription ul{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.subscription li{padding-left:26px;position:relative;font-size:.96em}
+.subscription li::before{content:"✓";position:absolute;left:0;font-weight:700}
+.subscription .price{font-size:clamp(36px,3.4vw,48px);font-weight:800;line-height:1}
+.subscription .price small{display:block;font-size:.45em;font-weight:500;opacity:.88;margin-top:6px}
+.subscription .btn{background:#fff;color:var(--accent);margin-top:16px}
+.subscription .btn:hover{background:var(--bg-soft)}
+@media (max-width:820px){.subscription{grid-template-columns:1fr;text-align:center}}
 
-  /* ---------- HOW IT WORKS ---------- */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    position: relative;
-  }
-  .step {
-    text-align: left;
-    position: relative;
-  }
-  .step-num {
-    font-size: 64px;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .step-num::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-  .step h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-    letter-spacing: -0.01em;
-  }
-  .step p {
-    color: var(--ink-soft);
-    font-size: 15px;
-  }
-  @media (max-width: 860px) {
-    .steps { grid-template-columns: 1fr; gap: 40px; }
-  }
+/* Parts shop */
+.parts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,22px)}
+.part{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(18px,2.2vw,26px);display:flex;flex-direction:column;gap:10px;
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.part:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.part .cat{font-size:.8em;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;font-weight:600}
+.part h3{margin:0}
+.part .price{color:var(--accent);font-weight:800;font-size:1.3em;margin-top:auto}
+.part .btn{margin-top:10px;width:100%}
+@media (max-width:900px){.parts{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.parts{grid-template-columns:1fr}}
 
-  /* ---------- PRICING ---------- */
-  .pricing {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .plans {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .plan {
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 36px 32px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  .plan.featured {
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent-dark);
-    transform: scale(1.02);
-  }
-  .plan.featured .plan-features li { color: rgba(245, 241, 232, 0.85); }
-  .plan.featured .plan-features li::before { background: rgba(245, 241, 232, 0.3); color: var(--bg); }
-  .plan-badge {
-    position: absolute;
-    top: -12px;
-    right: 24px;
-    background: var(--bg);
-    color: var(--accent-dark);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 999px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  .plan h3 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    color: inherit;
-  }
-  .plan.featured h3 { color: var(--bg); }
-  .plan-price {
-    font-size: 44px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-  .plan-price small {
-    font-size: 15px;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-  .plan.featured .plan-price small { color: rgba(245, 241, 232, 0.7); }
-  .plan-desc {
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--line);
-  }
-  .plan.featured .plan-desc {
-    color: rgba(245, 241, 232, 0.7);
-    border-bottom-color: rgba(245, 241, 232, 0.15);
-  }
-  .plan-features {
-    list-style: none;
-    margin-bottom: 32px;
-    flex: 1;
-  }
-  .plan-features li {
-    padding: 8px 0;
-    font-size: 15px;
-    color: var(--ink);
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .plan-features li::before {
-    content: "";
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-    margin-top: 3px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23F5F1E8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3 3 7-7'/></svg>");
-    background-size: 14px;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  .plan .btn { width: 100%; justify-content: center; }
-  .plan.featured .btn-primary {
-    background: var(--bg);
-    color: var(--accent-dark);
-  }
-  .plan.featured .btn-primary:hover { background: #fff; }
+/* Process */
+.process{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,64px);align-items:center}
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(16px,2vw,22px);display:flex;gap:18px;align-items:flex-start}
+.step-num{flex:0 0 auto;width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--white);font-weight:800;font-size:1.1em;display:grid;place-items:center}
+.step h3{margin-bottom:4px}
+.step p{color:var(--ink-soft);font-size:.96em}
+.process-photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--bg-soft)}
+.process-photo img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.process-photo figcaption{padding:12px 18px;background:var(--white);color:var(--ink-soft);font-size:.9em;border-top:1px solid var(--line)}
+@media (max-width:820px){.process{grid-template-columns:1fr}}
 
-  @media (max-width: 860px) {
-    .plans { grid-template-columns: 1fr; }
-    .plan.featured { transform: none; }
-  }
+/* Team */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px)}
+.member{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.member-photo{aspect-ratio:4/3;overflow:hidden;background:var(--bg-soft)}
+.member-photo img{width:100%;height:100%;object-fit:cover}
+.member-body{padding:clamp(16px,2vw,22px);display:flex;flex-direction:column;gap:6px}
+.member .role{color:var(--accent-2);font-weight:600;font-size:.95em}
+.member p{color:var(--ink-soft);font-size:.94em;margin-top:6px}
+@media (max-width:900px){.team{grid-template-columns:1fr}}
 
-  /* ---------- REVIEWS ---------- */
-  .reviews {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-  .review {
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 36px 32px;
-  }
-  .stars {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-  }
-  .review blockquote {
-    font-size: 18px;
-    line-height: 1.55;
-    margin-bottom: 28px;
-    letter-spacing: -0.005em;
-  }
-  .reviewer {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-  }
-  .avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-  }
-  .reviewer-info strong { display: block; font-size: 15px; }
-  .reviewer-info span { font-size: 13px; color: var(--ink-soft); }
-  @media (max-width: 860px) {
-    .reviews { grid-template-columns: 1fr; }
-  }
+/* Pricing */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px)}
+.plan{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,2.6vw,32px);display:flex;flex-direction:column;gap:12px;position:relative}
+.plan.featured{border-color:var(--accent);box-shadow:var(--shadow)}
+.plan.featured::before{content:"Популярное";position:absolute;top:-12px;right:20px;background:var(--accent);color:var(--white);font-size:.75em;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.plan h3{color:var(--accent)}
+.plan .amount{font-size:clamp(28px,2.6vw,38px);font-weight:800;color:var(--accent);line-height:1}
+.plan .amount small{font-size:.5em;font-weight:500;color:var(--ink-soft);margin-left:4px}
+.plan ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.plan li{padding-left:26px;position:relative;color:var(--ink-soft);font-size:.95em}
+.plan li::before{content:"";position:absolute;left:0;top:.55em;width:14px;height:14px;border-radius:50%;background:var(--bg-soft);border:2px solid var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.plan .btn{margin-top:auto}
+@media (max-width:900px){.pricing{grid-template-columns:1fr}}
 
-  /* ---------- FORM ---------- */
-  .form-section {
-    background: var(--accent-dark);
-    color: var(--bg);
-    border-radius: 32px;
-    padding: 72px 56px;
-    margin: 40px 24px;
-    max-width: 1112px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    overflow: hidden;
-  }
-  .form-section::before {
-    content: "";
-    position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 320px;
-    height: 320px;
-    border-radius: 50%;
-    background: rgba(245, 241, 232, 0.04);
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    position: relative;
-  }
-  .form-section h2 { color: var(--bg); }
-  .form-section p.lead {
-    color: rgba(245, 241, 232, 0.75);
-    font-size: 17px;
-    margin-bottom: 28px;
-  }
-  .form-perks {
-    list-style: none;
-  }
-  .form-perks li {
-    padding: 10px 0;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: rgba(245, 241, 232, 0.9);
-  }
-  .form-perks li::before {
-    content: "";
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--bg);
-    flex-shrink: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%231F3A2E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3 3 7-7'/></svg>");
-    background-size: 14px;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+/* FAQ */
+.faq{display:flex;flex-direction:column;gap:12px;max-width:860px;margin:0 auto}
+details{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);transition:border-color .25s ease,box-shadow .25s ease}
+details[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+details summary{
+  list-style:none;cursor:pointer;
+  padding:clamp(14px,2vw,20px) clamp(18px,2.4vw,24px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-weight:600;font-size:clamp(16px,1.1vw,18px);color:var(--accent);
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";flex:0 0 auto;font-size:1.4em;font-weight:700;color:var(--accent);transition:transform .25s ease;line-height:1}
+details[open] summary::after{transform:rotate(45deg)}
+details .ans{padding:0 clamp(18px,2.4vw,24px) clamp(14px,2vw,20px);color:var(--ink-soft);font-size:.97em}
 
-  form { display: flex; flex-direction: column; gap: 14px; }
-  .field label {
-    display: block;
-    font-size: 13px;
-    margin-bottom: 6px;
-    color: rgba(245, 241, 232, 0.7);
-  }
-  .field input,
-  .field textarea {
-    width: 100%;
-    padding: 16px 18px;
-    background: rgba(245, 241, 232, 0.08);
-    border: 1px solid rgba(245, 241, 232, 0.18);
-    border-radius: 14px;
-    color: var(--bg);
-    font-size: 15px;
-    font-family: inherit;
-    transition: border-color .2s, background .2s;
-  }
-  .field input::placeholder,
-  .field textarea::placeholder { color: rgba(245, 241, 232, 0.4); }
-  .field input:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--bg);
-    background: rgba(245, 241, 232, 0.12);
-  }
-  .field textarea { resize: vertical; min-height: 100px; }
-  form .btn-primary {
-    background: var(--bg);
-    color: var(--accent-dark);
-    margin-top: 8px;
-  }
-  form .btn-primary:hover { background: #fff; }
-  .consent {
-    font-size: 12px;
-    color: rgba(245, 241, 232, 0.55);
-    margin-top: 6px;
-  }
+/* Reviews */
+.reviews{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,24px)}
+.review{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,2.6vw,32px);display:flex;flex-direction:column;gap:14px}
+.stars{color:#d9a54a;letter-spacing:2px;font-size:1.1em}
+.review blockquote{margin:0;font-size:clamp(15px,1.1vw,17px);color:var(--ink)}
+.review .who{color:var(--ink-soft);font-size:.92em}
+.review .who b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.reviews{grid-template-columns:1fr}}
 
-  @media (max-width: 860px) {
-    .form-section { padding: 48px 28px; margin: 40px 16px; border-radius: 24px; }
-    .form-grid { grid-template-columns: 1fr; gap: 36px; }
-  }
+/* Form */
+.form-wrap{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(24px,3.2vw,40px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,40px);align-items:start;
+}
+.form-wrap .btn{width:100%;padding:1em}
+.form-note{margin-top:14px;color:var(--ink-soft);font-size:.9em;display:flex;gap:8px;align-items:flex-start}
+.form-note::before{content:"●";color:var(--accent);flex:0 0 auto}
+form{display:flex;flex-direction:column;gap:14px}
+.field label{display:block;font-size:.9em;color:var(--ink-soft);margin-bottom:6px;font-weight:500}
+.field input,.field textarea{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);font:inherit;color:var(--ink);transition:border-color .2s ease;
+}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+.field textarea{min-height:96px;resize:vertical}
+.form-ok{background:#e8f2ec;color:var(--accent);border:1px solid #bcd8c8;padding:12px 14px;border-radius:10px;font-size:.95em;display:none}
+.form-ok.show{display:block}
+@media (prefers-color-scheme: dark){
+  .form-ok{background:#232b25;color:#8fbc9f;border-color:#3a5244}
+}
+.voice-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.voice-btn{
+  padding:10px 14px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg);cursor:pointer;font-family:inherit;font-size:.9em;
+  display:inline-flex;align-items:center;gap:8px;transition:all .2s ease;
+}
+.voice-btn:hover{border-color:var(--accent-2)}
+.voice-btn.recording{background:#b85a4a;color:#fff;border-color:#b85a4a}
+.voice-btn.recording::before{content:"";width:10px;height:10px;border-radius:50%;background:#fff;animation:onlineBlink 1s infinite}
+.voice-player{display:none;margin-top:8px;width:100%}
+.voice-player.show{display:block}
+.voice-player audio{width:100%}
+@media (max-width:820px){.form-wrap{grid-template-columns:1fr}}
 
-  /* ---------- FOOTER ---------- */
-  footer {
-    padding: 60px 0 40px;
-    border-top: 1px solid var(--line);
-  }
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 48px;
-  }
-  .footer-col h4 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-    font-weight: 600;
-    margin-bottom: 18px;
-  }
-  .footer-col p, .footer-col a {
-    display: block;
-    color: var(--ink);
-    text-decoration: none;
-    font-size: 15px;
-    padding: 4px 0;
-    transition: color .2s;
-  }
-  .footer-col a:hover { color: var(--accent); }
-  .footer-brand p {
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin-top: 16px;
-    max-width: 280px;
-  }
-  .footer-bottom {
-    padding-top: 28px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    font-size: 13px;
-    color: var(--ink-soft);
-  }
+/* Map */
+.map-wrap{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--bg-soft);aspect-ratio:16/7}
+.map-wrap iframe{width:100%;height:100%;border:0;display:block}
 
-  @media (max-width: 860px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-  }
-  @media (max-width: 520px) {
-    .footer-grid { grid-template-columns: 1fr; }
-  }
+/* Footer */
+footer{background:var(--accent);color:#e6ece7;padding:clamp(40px,6vw,64px) 0 24px;margin-top:clamp(40px,6vw,72px)}
+footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
+.foot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);margin-bottom:32px}
+.foot-grid p{font-size:.94em;color:#c8d1cc;margin:0}
+.foot-grid a{color:var(--white);font-weight:600}
+.copy{border-top:1px solid rgba(255,255,255,.15);padding-top:18px;color:#b4bfb9;font-size:.85em;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+@media (max-width:820px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.foot-grid{grid-template-columns:1fr}}
+
+/* Search modal */
+.search-modal{
+  position:fixed;inset:0;z-index:100;background:rgba(20,28,22,.6);
+  display:none;align-items:flex-start;justify-content:center;padding-top:12vh;
+}
+.search-modal.open{display:flex}
+.search-box{
+  background:var(--white);border-radius:var(--radius);max-width:560px;width:92%;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.3);overflow:hidden;
+}
+.search-box input{
+  width:100%;padding:18px 22px;border:none;background:transparent;
+  font:inherit;font-size:1.1em;color:var(--ink);
+}
+.search-box input:focus{outline:none}
+.search-results{border-top:1px solid var(--line);max-height:50vh;overflow-y:auto}
+.search-results a{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 22px;color:var(--ink);transition:background .15s;
+}
+.search-results a:hover{background:var(--bg-soft)}
+.search-results a small{color:var(--ink-soft);font-size:.85em}
+.search-hint{padding:12px 22px;color:var(--ink-soft);font-size:.85em;border-top:1px solid var(--line)}
+
+/* Modal */
+.modal{
+  position:fixed;inset:0;z-index:100;background:rgba(20,28,22,.6);
+  display:none;align-items:center;justify-content:center;padding:clamp(16px,3vw,32px);
+  opacity:0;transition:opacity .25s ease;
+}
+.modal.open{display:flex;opacity:1}
+.modal-body{
+  background:var(--white);border-radius:var(--radius);
+  max-width:720px;width:100%;max-height:90vh;overflow-y:auto;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.4);position:relative;
+  transform:translateY(10px);transition:transform .25s ease;
+}
+.modal.open .modal-body{transform:none}
+.modal-close{
+  position:absolute;top:12px;right:12px;z-index:2;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--white);border:1px solid var(--line);
+  cursor:pointer;display:grid;place-items:center;font-size:1.4em;color:var(--ink);
+  transition:all .2s ease;
+}
+.modal-close:hover{background:var(--accent);color:var(--white)}
+.modal-img{aspect-ratio:16/9;overflow:hidden;background:var(--bg-soft)}
+.modal-img img,.modal-img .story-ph-css{width:100%;height:100%;object-fit:cover}
+.modal-content{padding:clamp(20px,3vw,32px)}
+.modal-content h3{margin-bottom:8px}
+.modal-content .tag{display:inline-block;background:var(--bg-soft);color:var(--accent);font-size:.78em;font-weight:600;padding:3px 9px;border-radius:999px;margin-bottom:16px;letter-spacing:.02em;text-transform:uppercase}
+.modal-sections{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,20px);margin-top:18px}
+.modal-sections > div{background:var(--bg-soft);border-radius:10px;padding:clamp(12px,1.6vw,16px)}
+.modal-sections h4{margin:0 0 6px;color:var(--accent);font-size:.92em;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.modal-sections p{color:var(--ink);font-size:.94em}
+.modal-result{margin-top:18px;padding:clamp(14px,2vw,18px);background:var(--accent);color:var(--white);border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.modal-result b{font-size:1.1em}
+.modal-result span{font-size:.9em;opacity:.88}
+@media (max-width:620px){.modal-sections{grid-template-columns:1fr}}
+
+/* WhatsApp */
+.wa-float{
+  position:fixed;right:clamp(14px,2vw,24px);bottom:clamp(14px,2vw,24px);
+  width:58px;height:58px;border-radius:50%;background:#25d366;color:#fff;
+  display:grid;place-items:center;z-index:50;
+  box-shadow:0 8px 22px -6px rgba(37,211,102,.55),0 0 0 0 rgba(37,211,102,.6);
+  animation:waPulse 2.4s ease-out infinite;transition:transform .25s ease;
+}
+.wa-float:hover{transform:scale(1.08)}
+.wa-float svg{width:28px;height:28px;fill:#fff}
+.wa-float .tip{
+  position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:var(--ink);color:var(--bg);padding:6px 12px;border-radius:8px;
+  font-size:.85em;font-weight:500;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .2s ease;
+}
+.wa-float:hover .tip{opacity:1}
+@keyframes waPulse{
+  0%{box-shadow:0 8px 22px -6px rgba(37,211,102,.55),0 0 0 0 rgba(37,211,102,.6)}
+  70%{box-shadow:0 8px 22px -6px rgba(37,211,102,.55),0 0 0 18px rgba(37,211,102,0)}
+  100%{box-shadow:0 8px 22px -6px rgba(37,211,102,.55),0 0 0 0 rgba(37,211,102,0)}
+}
+@media (max-width:480px){
+  .wa-float{width:52px;height:52px}
+  .wa-float svg{width:24px;height:24px}
+}
 </style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
-<header class="nav">
-  <div class="wrap nav-inner">
-    <a href="#" class="logo">
-      <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="19" stroke="#2F4F3F" stroke-width="2"/>
-        <circle cx="20" cy="20" r="7" fill="#2F4F3F"/>
-        <circle cx="20" cy="20" r="2.5" fill="#F5F1E8"/>
-        <path d="M20 3v6M20 31v6M3 20h6M31 20h6M8 8l4 4M28 28l4 4M8 32l4-4M28 12l4-4" stroke="#2F4F3F" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      Тихий винт
-    </a>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="#services">Услуги</a></li>
-        <li><a href="#how">Как работаем</a></li>
-        <li><a href="#pricing">Тарифы</a></li>
-        <li><a href="#reviews">Отзывы</a></li>
-      </ul>
+<header class="site">
+  <div class="container nav">
+    <a href="#top" class="logo" aria-label="Тихий винт — на главную">Тихий винт</a>
+    <nav class="menu" aria-label="Основное меню">
+      <a href="#services">Услуги</a>
+      <a href="#calc">Калькулятор</a>
+      <a href="#booking">Запись</a>
+      <a href="#pricing">Цены</a>
+      <a href="#stories">Кейсы</a>
     </nav>
-    <a href="tel:+74951234567" class="nav-phone">+7 (495) 123-45-67</a>
+    <div class="header-actions">
+      <span class="viewers-badge" id="viewersBadge">Сейчас смотрят: 3</span>
+      <button class="icon-btn" id="searchBtn" type="button" aria-label="Поиск по сайту">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <a class="phone" href="tel:+74951234567"><span class="online-dot" title="Мастер сейчас на месте"></span>+7 (495) 123-45-67</a>
+    </div>
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">Мастерская с 2014 года</span>
-      <h1>Чиним технику <span class="accent">тихо,</span><br>точно и&nbsp;надолго</h1>
-      <p class="lead">Бытовая техника, электроника и мелкий ремонт — без суеты, лишних запчастей и наценок. Возвращаем вещам вторую жизнь, а вам — спокойный вечер.</p>
-      <div class="cta-row">
-        <a href="#form" class="btn btn-primary">
-          Записаться на ремонт
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="#services" class="btn btn-ghost">Посмотреть услуги</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat"><strong>12 лет</strong><span>на рынке</span></div>
-        <div class="stat"><strong>8 400+</strong><span>устройств починено</span></div>
-        <div class="stat"><strong>98%</strong><span>клиентов возвращаются</span></div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <img class="hero-photo" src="https://i.ibb.co/mr3sX7Dy/shop.jpg" alt="Мастерская «Тихий винт»: рабочее место и полки с техникой" width="800" height="800" loading="eager">
-  </div>
-</section>
+<main id="top">
 
-<!-- ============ SERVICES ============ -->
-<section class="services" id="services">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Что чиним</span>
-      <h2>Три направления — одна мастерская</h2>
-      <p>Работаем с крупной и мелкой техникой, электроникой и бытовыми мелочами. Берёмся даже за то, от чего отказались другие.</p>
-    </div>
-    <div class="grid-3">
-      <article class="card">
-        <div class="card-icon">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="3" width="16" height="18" rx="2" stroke="#F5F1E8" stroke-width="1.8"/>
-            <line x1="4" y1="10" x2="20" y2="10" stroke="#F5F1E8" stroke-width="1.8"/>
-            <circle cx="12" cy="16" r="2.5" stroke="#F5F1E8" stroke-width="1.8"/>
-          </svg>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="promo">−10% пенсионерам · бесплатная диагностика в будни</span>
+        <h1>Чиним технику тихо, точно <span>и&nbsp;надолго</span></h1>
+        <p class="hero-lead">Семейная мастерская в Москве с 2014 года. Возвращаем к жизни бытовую технику, электронику и ноутбуки — без спешки, навязанных услуг и лишних деталей в счёте.</p>
+        <div class="hero-actions">
+          <a href="#request" class="btn btn-primary">Записаться на ремонт</a>
+          <a href="#calc" class="btn btn-secondary">Рассчитать стоимость</a>
         </div>
-        <h3>Крупная бытовая техника</h3>
-        <p>Стиральные и посудомоечные машины, холодильники, плиты, духовки. Выезд мастера в день обращения.</p>
-        <div class="card-price">от 1 500 ₽ · диагностика бесплатно</div>
-      </article>
-
-      <article class="card">
-        <div class="card-icon">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="5" width="18" height="11" rx="1.5" stroke="#F5F1E8" stroke-width="1.8"/>
-            <line x1="2" y1="19" x2="22" y2="19" stroke="#F5F1E8" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="9" y1="16" x2="9" y2="19" stroke="#F5F1E8" stroke-width="1.8"/>
-            <line x1="15" y1="16" x2="15" y2="19" stroke="#F5F1E8" stroke-width="1.8"/>
-          </svg>
+        <div class="stats">
+          <div class="stat"><b>12 лет</b><span>на рынке ремонта</span></div>
+          <div class="stat"><b>8&nbsp;400+</b><span>устройств починили</span></div>
+          <div class="stat"><b>98%</b><span>возвращаются снова</span></div>
         </div>
-        <h3>Электроника и гаджеты</h3>
-        <p>Ноутбуки, планшеты, смартфоны, аудио- и видеотехника. Замена экранов, разъёмов, чистка, восстановление данных.</p>
-        <div class="card-price">от 900 ₽ · срок от 1 часа</div>
-      </article>
+      </div>
+      <div class="hero-photo reveal">
+        <img src="https://i.ibb.co/mr3sX7Dy/shop.jpg" alt="Интерьер мастерской «Тихий винт»: верстаки, инструмент и стеллажи с техникой" width="1200" height="900">
+      </div>
+    </div>
+  </section>
 
-      <article class="card">
-        <div class="card-icon">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-            <path d="M14 4l6 6-9 9H5v-6l9-9z" stroke="#F5F1E8" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M12 6l6 6" stroke="#F5F1E8" stroke-width="1.8"/>
-            <path d="M3 21l4-4" stroke="#F5F1E8" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
+  <section id="services">
+    <div class="container">
+      <h2 class="section-title reveal">Что мы ремонтируем</h2>
+      <p class="section-lead reveal">Три направления, в которых нам можно доверять. Работаем с техникой любого возраста.</p>
+      <div class="services">
+        <article class="card reveal"><span class="tag">Бытовая техника</span><h3>Стиральные и посудомоечные машины, холодильники, духовки</h3><p>Меняем подшипники, ТЭНы, помпы, модули управления. Выезд по Москве — бесплатно при ремонте.</p><div class="price">от 1 200 ₽</div></article>
+        <article class="card reveal"><span class="tag">Электроника</span><h3>Телевизоры, мониторы, аудиотехника, усилители, винил</h3><p>Пайка SMD, замена конденсаторов, восстановление цепей питания. Диагностика в день обращения.</p><div class="price">от 900 ₽</div></article>
+        <article class="card reveal"><span class="tag">Ноутбуки и мелкий ремонт</span><h3>Чистка, замена матриц, клавиатур, термоинтерфейса</h3><p>Восстанавливаем после залития, меняем аккумуляторы и разъёмы. Мелкие работы — за час при вас.</p><div class="price">от 700 ₽</div></article>
+      </div>
+      <div class="not-repair reveal">
+        <div class="icon" aria-hidden="true">!</div>
+        <div>
+          <h3>Что мы НЕ ремонтируем</h3>
+          <p style="color:var(--ink-soft)">Скажем сразу, чтобы не тратить ваше время. По этим позициям подскажем проверенных коллег.</p>
+          <ul><li>Смартфоны и планшеты</li><li>Газовые котлы и колонки</li><li>Автотехника и автоаккумуляторы</li><li>Сварочные аппараты</li><li>Промышленное оборудование</li></ul>
         </div>
-        <h3>Мелкий ремонт и «муж на час»</h3>
-        <p>Сантехника, электрика, сборка мебели, мелкий бытовой ремонт. Приезжаем с инструментом и расходниками.</p>
-        <div class="card-price">от 1 200 ₽ · выезд в течение дня</div>
-      </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ HOW IT WORKS ============ -->
-<section id="how">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Процесс</span>
-      <h2>Как мы работаем</h2>
-      <p>Три простых шага от заявки до работающей техники. Никаких сюрпризов в счёте.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h3>Оставляете заявку</h3>
-        <p>Позвоните, напишите в мессенджер или заполните форму. Перезвоним в течение 15 минут, уточним детали и согласуем удобное время.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h3>Диагностика и смета</h3>
-        <p>Мастер приезжает, находит причину поломки и называет точную стоимость. Если вас всё устраивает — сразу приступаем к ремонту.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h3>Ремонт и гарантия</h3>
-        <p>Чиним на месте или забираем в мастерскую. Даём гарантию до 12 месяцев на работу и установленные запчасти. Оплата после проверки.</p>
-      </div>
-    </div>
-    <figure class="photo-band">
-      <img src="https://i.ibb.co/2VjcchJ/solder.jpg" alt="Пайка платы: паяльная станция и инструменты мастера" width="1400" height="788" loading="lazy">
-      <figcaption>Мелкий ремонт плат делаем на месте — без отправки в другой город.</figcaption>
-    </figure>
-  </div>
-</section>
-
-<!-- ============ PRICING ============ -->
-<section class="pricing" id="pricing">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Тарифы</span>
-      <h2>Прозрачные цены без звёздочек</h2>
-      <p>Выбирайте формат обслуживания — разовый ремонт или абонентская забота о технике.</p>
-    </div>
-    <div class="plans">
-      <div class="plan">
-        <h3>Базовый</h3>
-        <div class="plan-price">900 ₽<small> / выезд</small></div>
-        <p class="plan-desc">Разовый ремонт небольшой техники</p>
-        <ul class="plan-features">
-          <li>Диагностика на месте</li>
-          <li>Ремонт за 1 визит</li>
-          <li>Гарантия 3 месяца</li>
-          <li>Оплата после работы</li>
-        </ul>
-        <a href="#form" class="btn btn-ghost">Выбрать</a>
-      </div>
-
-      <div class="plan featured">
-        <span class="plan-badge">Популярный</span>
-        <h3>Стандарт</h3>
-        <div class="plan-price">2 900 ₽<small> / случай</small></div>
-        <p class="plan-desc">Ремонт крупной техники с запчастями</p>
-        <ul class="plan-features">
-          <li>Бесплатная диагностика</li>
-          <li>Запчасти со склада</li>
-          <li>Гарантия 12 месяцев</li>
-          <li>Приоритетный выезд</li>
-          <li>Чистка и проверка в подарок</li>
-        </ul>
-        <a href="#form" class="btn btn-primary">Выбрать</a>
-      </div>
-
-      <div class="plan">
-        <h3>Премиум</h3>
-        <div class="plan-price">от 990 ₽<small> / месяц</small></div>
-        <p class="plan-desc">Абонентское обслуживание дома</p>
-        <ul class="plan-features">
-          <li>Неограниченные выезды</li>
-          <li>Персональный мастер</li>
-          <li>Гарантия на всю технику</li>
-          <li>Скидка 20% на запчасти</li>
-          <li>Плановое ТО каждый квартал</li>
-        </ul>
-        <a href="#form" class="btn btn-ghost">Выбрать</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ REVIEWS ============ -->
-<section id="reviews">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Отзывы</span>
-      <h2>Что говорят клиенты</h2>
-      <p>Нас рекомендуют соседям, друзьям и коллегам. Вот пара свежих историй.</p>
-    </div>
-    <div class="reviews">
-      <article class="review">
-        <div class="stars">
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-        </div>
-        <blockquote>«Стиралка загудела так, что соседи стучали в стену. Мастер приехал в тот же день, заменил подшипник, заодно почистил фильтр. Работает уже полгода как новая. И главное — спокойно, без навязывания лишних услуг.»</blockquote>
-        <div class="reviewer">
-          <div class="avatar">АК</div>
-          <div class="reviewer-info">
-            <strong>Анна Ковалёва</strong>
-            <span>Москва, Марьино</span>
+  <section id="calc" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal">Калькулятор стоимости</h2>
+      <p class="section-lead reveal">Узнайте ориентировочную цену и срок ремонта за 30 секунд.</p>
+      <div class="calc reveal" id="calc">
+        <div class="calc-steps">
+          <div class="calc-step">
+            <div class="calc-step-head"><div class="calc-step-num">1</div>Тип техники</div>
+            <div class="calc-cats" id="calcCats">
+              <button class="calc-cat" type="button" data-cat="appliances">Бытовая техника</button>
+              <button class="calc-cat" type="button" data-cat="electronics">Электроника</button>
+              <button class="calc-cat" type="button" data-cat="laptops">Ноутбуки</button>
+            </div>
+          </div>
+          <div class="calc-step">
+            <div class="calc-step-head"><div class="calc-step-num">2</div>Устройство</div>
+            <select id="calcDevice" disabled><option value="">— выберите тип —</option></select>
+          </div>
+          <div class="calc-step">
+            <div class="calc-step-head"><div class="calc-step-num">3</div>Симптом</div>
+            <select id="calcSymptom" disabled><option value="">— сначала устройство —</option></select>
           </div>
         </div>
-      </article>
-
-      <article class="review">
-        <div class="stars">
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
-          <svg width="18" height="18" viewBox="0 0 20 20"><path d="M10 1l2.8 5.7 6.2.9-4.5 4.4 1.1 6.1L10 15l-5.6 3 1.1-6.1L1 7.6l6.2-.9L10 1z" fill="#2F4F3F"/></svg>
+        <div class="calc-result" id="calcResult">
+          <div><div class="calc-result-price" id="calcPrice"></div><div class="calc-result-desc" id="calcDesc"></div></div>
+          <a href="#request" class="btn btn-primary" id="calcApply">Оставить заявку</a>
         </div>
-        <blockquote>«Ноутбук перестал включаться — отнёс в три сервиса, везде предлагали замену материнки за 25 тысяч. В "Тихом винте" нашли вздувшийся конденсатор, поменяли за 3 500. Честные ребята, рекомендую.»</blockquote>
-        <div class="reviewer">
-          <div class="avatar">ДС</div>
-          <div class="reviewer-info">
-            <strong>Дмитрий Соколов</strong>
-            <span>Москва, Хамовники</span>
+        <div class="calc-empty" id="calcEmpty">Выберите тип техники, устройство и симптом — покажем ориентировочную стоимость.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <div class="container">
+      <h2 class="section-title reveal">Онлайн-запись</h2>
+      <p class="section-lead reveal">Выберите удобный день и время — мастер подтвердит бронь по телефону.</p>
+      <div class="booking reveal">
+        <div class="booking-days" id="bookingDays"></div>
+        <div class="booking-slots" id="bookingSlots"></div>
+        <select class="booking-service" id="bookingService">
+          <option value="">— что будем ремонтировать? —</option>
+          <option>Бытовая техника</option>
+          <option>Электроника</option>
+          <option>Ноутбук</option>
+          <option>Консультация</option>
+        </select>
+        <div class="booking-confirm" id="bookingConfirm">
+          <div class="info" id="bookingInfo"></div>
+          <button class="btn btn-primary" id="bookingSubmit">Подтвердить запись</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stories" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal">Истории ремонтов</h2>
+      <p class="section-lead reveal">Развёрнутые кейсы: что сломалось, что нашли и как чинили.</p>
+      <div class="stories" id="stories"></div>
+    </div>
+  </section>
+
+  <section id="warranty">
+    <div class="container">
+      <h2 class="section-title reveal" style="text-align:center">Проверить гарантию</h2>
+      <p class="section-lead center reveal">Введите номер с гарантийного талона — покажем условия и срок действия.</p>
+      <div class="warranty reveal">
+        <form class="warranty-form" id="warrantyForm">
+          <input type="text" id="warrantyInput" maxlength="7" placeholder="Например, TV-2847" aria-label="Номер заявки">
+          <button type="submit" class="btn btn-primary">Проверить</button>
+        </form>
+        <div class="warranty-result" id="warrantyResult"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal">Как мы работаем</h2>
+      <p class="section-lead reveal">Три понятных шага без сюрпризов в чеке.</p>
+      <div class="process">
+        <div class="steps">
+          <div class="step reveal"><div class="step-num">1</div><div><h3>Заявка</h3><p>Оставьте телефон и коротко опишите поломку. Мастер перезвонит в течение 15 минут.</p></div></div>
+          <div class="step reveal"><div class="step-num">2</div><div><h3>Диагностика и смета</h3><p>Осматриваем устройство, находим причину и составляем фиксированную смету.</p></div></div>
+          <div class="step reveal"><div class="step-num">3</div><div><h3>Ремонт и гарантия</h3><p>Чиним, тестируем под нагрузкой и выдаём гарантийный талон.</p></div></div>
+        </div>
+        <figure class="process-photo reveal">
+          <img src="https://i.ibb.co/2VjcchJ/solder.jpg" alt="Руки мастера паяют электронную плату — восстановление SMD-компонентов" width="1200" height="900" loading="lazy">
+          <figcaption>Пайка SMD-компонентов под микроскопом. Так мы восстанавливаем платы после коротких замыканий.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="subscription">
+    <div class="container">
+      <div class="subscription reveal">
+        <div>
+          <h2>Подписка на техобслуживание</h2>
+          <p style="opacity:.92">Ежегодная профилактика крупной техники — чтобы она не ломалась внезапно в разгар недели.</p>
+          <ul>
+            <li>Чистка и профилактика холодильника, стиральной и посудомоечной машин</li>
+            <li>Проверка электрики и уплотнителей</li>
+            <li>Приоритетная запись без очереди</li>
+            <li>Скидка 15% на любые запчасти</li>
+            <li>Один вызов мастера на дом в год — бесплатно</li>
+          </ul>
+        </div>
+        <div style="text-align:center">
+          <div class="price">3 000 ₽<small>в год за всю крупную технику</small></div>
+          <a href="#request" class="btn" data-issue="Хочу подключить подписку на техобслуживание">Подключить подписку</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="parts" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal">Запчасти в наличии</h2>
+      <p class="section-lead reveal">Расходники и частые детали — всегда на складе. Установим или продадим отдельно.</p>
+      <div class="parts" id="parts"></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="container">
+      <h2 class="section-title reveal">Прозрачные цены</h2>
+      <p class="section-lead reveal">Ориентиры по стоимости. Точная цена — после бесплатной диагностики.</p>
+      <div class="pricing">
+        <article class="plan reveal"><h3>Диагностика</h3><div class="amount">0 ₽ <small>при ремонте</small></div><ul><li>Осмотр и поиск неисправности</li><li>Проверка под нагрузкой</li><li>Составление сметы</li><li>Консультация по ремонту</li></ul><a href="#request" class="btn btn-secondary">Оставить заявку</a></article>
+        <article class="plan featured reveal"><h3>Стандартный ремонт</h3><div class="amount">от 1 500 ₽</div><ul><li>Замена типовых узлов</li><li>Чистка и профилактика</li><li>Замена термоинтерфейса</li><li>Гарантия 6 месяцев</li></ul><a href="#request" class="btn btn-primary">Записаться</a></article>
+        <article class="plan reveal"><h3>Сложный ремонт</h3><div class="amount">от 3 500 ₽</div><ul><li>Пайка BGA и SMD-компонентов</li><li>Восстановление после залития</li><li>Поиск обрывов цепей питания</li><li>Гарантия до 12 месяцев</li></ul><a href="#request" class="btn btn-secondary">Оставить заявку</a></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal center">Частые вопросы</h2>
+      <p class="section-lead center reveal">Ответы на то, о чём спрашивают чаще всего.</p>
+      <div class="faq">
+        <details class="reveal"><summary>Сколько стоит диагностика?</summary><div class="ans">Диагностика бесплатна, если вы остаётесь на ремонт. Если отказываетесь — платите 500 ₽ за выезд мастера по Москве или 300 ₽ за диагностику в мастерской.</div></details>
+        <details class="reveal"><summary>Сколько времени займёт ремонт?</summary><div class="ans">Мелкий ремонт — от 30 минут до 2 часов. Стандартный — 1–3 дня. Сложный — 3–7 дней.</div></details>
+        <details class="reveal"><summary>Вы выезжаете на дом?</summary><div class="ans">Да, по Москве в пределах МКАД — бесплатно при условии ремонта. За МКАД — 30 ₽/км.</div></details>
+        <details class="reveal"><summary>Какая гарантия на работы?</summary><div class="ans">От 3 до 12 месяцев в зависимости от вида работ.</div></details>
+        <details class="reveal"><summary>Можно привезти технику к вам?</summary><div class="ans">Конечно. Мы находимся на ул. Винтовой, 12, работаем ежедневно с 10:00 до 20:00.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="container">
+      <h2 class="section-title reveal">Что говорят клиенты</h2>
+      <p class="section-lead reveal">За 12 лет работы нас рекомендуют друзьям и соседям.</p>
+      <div class="reviews">
+        <article class="review reveal"><div class="stars" aria-label="Оценка 5 из 5">★★★★★</div><blockquote>«Принёс старый ноутбук 2011 года, думал — на свалку. Ребята перепаяли цепь питания, почистили, поставили SSD — теперь работает тише нового.»</blockquote><p class="who"><b>Александр М.</b> · Москва, Марьино</p></article>
+        <article class="review reveal"><div class="stars" aria-label="Оценка 5 из 5">★★★★★</div><blockquote>«Сломалась стиральная машина перед праздниками — вызвала мастера утром, к обеду уже стирала.»</blockquote><p class="who"><b>Елена В.</b> · Москва, Бутово</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="request" style="background:var(--bg-soft)">
+    <div class="container">
+      <h2 class="section-title reveal">Оставить заявку</h2>
+      <p class="section-lead reveal">Заполните короткую форму — перезвоним в течение 15 минут.</p>
+      <div class="form-wrap reveal">
+        <form id="requestForm" action="https://formsubmit.co/your@email.com" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Новая заявка с сайта «Тихий винт»">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <div class="field"><label for="name">Ваше имя</label><input id="name" name="name" type="text" autocomplete="name" required placeholder="Как к вам обращаться"></div>
+          <div class="field"><label for="phone">Телефон</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+7 (___) ___-__-__"></div>
+          <div class="field">
+            <label for="issue">Что случилось</label>
+            <textarea id="issue" name="issue" required placeholder="Модель устройства, симптомы, когда сломалось"></textarea>
+            <div class="voice-row" style="margin-top:10px">
+              <button type="button" class="voice-btn" id="voiceBtn">🎤 Записать голосовое (до 30 сек)</button>
+            </div>
+            <div class="voice-player" id="voicePlayer"><audio controls id="voiceAudio"></audio><small style="color:var(--ink-soft)">Голосовое будет доступно мастеру при звонке.</small></div>
           </div>
+          <button type="submit" class="btn btn-primary">Отправить заявку</button>
+          <div id="formOk" class="form-ok" role="status" aria-live="polite">Спасибо! Заявка принята, мастер перезвонит в течение 15 минут.</div>
+        </form>
+        <div>
+          <h3>Как это работает</h3>
+          <p style="color:var(--ink-soft);margin-top:8px">Коротко опишите проблему — этого достаточно. Все детали мастер уточнит по телефону. Мы не передаём ваши данные третьим лицам.</p>
+          <p class="form-note">Перезвоним в течение 15 минут в часы работы: ежедневно с 10:00 до 20:00.</p>
+          <p class="form-note">Диагностика бесплатна, если остаётесь на ремонт.</p>
+          <p class="form-note">Фиксируем цену в смете до начала работы.</p>
+          <p class="form-note">Можно описать проблему голосом — кнопка выше.</p>
         </div>
-      </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<figure class="photo-band">
-  <img src="https://i.ibb.co/wh8ZTy37/laptop.jpg" alt="Ремонт ноутбука в мастерской: разобранный корпус на столе" width="1400" height="933" loading="lazy">
-</figure>
-
-<!-- ============ FORM ============ -->
-<div class="form-section" id="form">
-  <div class="form-grid">
-    <div>
-      <span class="eyebrow" style="background: rgba(245,241,232,0.1); color: var(--bg); border-color: rgba(245,241,232,0.2);">Заявка</span>
-      <h2>Оставьте заявку — перезвоним за 15 минут</h2>
-      <p class="lead">Расскажите, что сломалось. Мы уточним детали, назовём ориентировочную стоимость и подберём удобное время визита мастера.</p>
-      <ul class="form-perks">
-        <li>Бесплатная консультация по телефону</li>
-        <li>Мастер в день обращения</li>
-        <li>Оплата только после ремонта</li>
-        <li>Гарантия до 12 месяцев</li>
-      </ul>
+  <section id="map" style="padding-top:0">
+    <div class="container">
+      <h2 class="section-title reveal" style="margin-bottom:clamp(20px,3vw,36px)">Как нас найти</h2>
+      <div class="map-wrap reveal">
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=37.61%2C55.74%2C37.64%2C55.76&amp;layer=mapnik&amp;marker=55.75%2C37.625" title="Карта: мастерская «Тихий винт» в центре Москвы" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
     </div>
-    <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='Заявка отправлена ✓'; this.reset();">
-      <div class="field">
-        <label for="name">Ваше имя</label>
-        <input id="name" type="text" placeholder="Как к вам обращаться" required>
-      </div>
-      <div class="field">
-        <label for="phone">Телефон</label>
-        <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required>
-      </div>
-      <div class="field">
-        <label for="msg">Что случилось?</label>
-        <textarea id="msg" placeholder="Коротко опишите поломку и удобные часы для визита"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">
-        Отправить заявку
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <p class="consent">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
-    </form>
-  </div>
-</div>
+  </section>
 
-<!-- ============ FOOTER ============ -->
+</main>
+
 <footer>
-  <div class="wrap">
-    <div class="footer-grid">
-      <div class="footer-col footer-brand">
-        <a href="#" class="logo">
-          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="19" stroke="#2F4F3F" stroke-width="2"/>
-            <circle cx="20" cy="20" r="7" fill="#2F4F3F"/>
-            <circle cx="20" cy="20" r="2.5" fill="#F5F1E8"/>
-            <path d="M20 3v6M20 31v6M3 20h6M31 20h6" stroke="#2F4F3F" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          Тихий винт
-        </a>
-        <p>Мастерская по ремонту техники. Работаем тихо, чиним точно, гарантируем надолго.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Контакты</h4>
-        <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-        <a href="mailto:hello@tvin.ru">hello@tvin.ru</a>
-        <p>Пн–Вс: 9:00 – 21:00</p>
-      </div>
-      <div class="footer-col">
-        <h4>Адрес</h4>
-        <p>г. Москва,</p>
-        <p>ул. Мастеровая, 14</p>
-        <p>м. Павелецкая</p>
-      </div>
-      <div class="footer-col">
-        <h4>Мы в сети</h4>
-        <a href="#">Telegram</a>
-        <a href="#">WhatsApp</a>
-        <a href="#">ВКонтакте</a>
-      </div>
+  <div class="container">
+    <div class="foot-grid">
+      <div><h4>Тихий винт</h4><p>Мастерская по ремонту техники в Москве. Работаем с 2014 года.</p></div>
+      <div><h4>Адрес</h4><p>Москва, ул. Винтовая, 12<br>вход со двора, 2 этаж</p></div>
+      <div><h4>Часы работы</h4><p>Ежедневно с 10:00 до 20:00</p></div>
+      <div><h4>Контакты</h4><p><a href="tel:+74951234567">+7 (495) 123-45-67</a><br>hello@tihiy-vint.ru</p></div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2014–2026 «Тихий винт». Все права защищены.</span>
-      <span class="credit">Фото: Wikimedia Commons (CC0 / CC BY-SA 4.0)</span>
+    <div class="copy">
+      <span>© 2014–2026 Мастерская «Тихий винт». Все права защищены.</span>
+      <span>Фото: Wikimedia Commons (CC0 / CC BY-SA 4.0)</span>
     </div>
   </div>
 </footer>
 
+<div class="search-modal" id="searchModal" role="dialog" aria-modal="true">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Поиск по сайту…" aria-label="Поиск">
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-hint">↑↓ для навигации · Enter — перейти · Esc — закрыть</div>
+  </div>
+</div>
+
+<a class="wa-float" href="https://wa.me/74951234567?text=Здравствуйте!%20Хочу%20записаться%20на%20ремонт" target="_blank" rel="noopener" aria-label="Написать нам в WhatsApp">
+  <span class="tip">Написать в WhatsApp</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.5-.7-2.5-1.4-3.5-3.2-.3-.5.3-.4.8-1.4.1-.2 0-.3 0-.5 0-.1-.6-1.4-.8-2-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.1 4.9 4.3 1.8.7 2.5.8 3.3.7.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+</a>
+
+<div class="modal" id="storyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-body">
+    <button class="modal-close" type="button" aria-label="Закрыть">×</button>
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-content">
+      <span class="tag" id="modalTag"></span>
+      <h3 id="modalTitle"></h3>
+      <div class="modal-sections" id="modalSections"></div>
+      <div class="modal-result" id="modalResult"></div>
+      <a href="#request" class="btn btn-primary" id="modalApply" style="margin-top:18px;width:100%">Записаться на похожий ремонт</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Viewers counter
+  var viewers = document.getElementById('viewersBadge');
+  function setViewers(){ viewers.textContent = 'Сейчас смотрят: ' + (2 + Math.floor(Math.random()*4)); }
+  setViewers();
+  setInterval(setViewers, 18000);
+
+  // Reveal
+  var els = document.querySelectorAll('.reveal');
+  var io = null;
+  if (reduce || !('IntersectionObserver' in window)) {
+    els.forEach(function(el){ el.classList.add('is-visible'); });
+  } else {
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  // Search
+  var searchTargets = [
+    ['#services','Услуги — что мы ремонтируем','Бытовая техника, электроника, ноутбуки'],
+    ['#calc','Калькулятор стоимости','Расчёт цены за 30 секунд'],
+    ['#booking','Онлайн-запись','Выбор дня и времени'],
+    ['#stories','Истории ремонтов','Развёрнутые кейсы'],
+    ['#warranty','Проверить гарантию','По номеру заявки'],
+    ['#process','Как мы работаем','Три шага'],
+    ['#subscription','Подписка на техобслуживание','3 000 ₽/год'],
+    ['#parts','Запчасти в наличии','Помпы, ТЭНы, термопаста'],
+    ['#pricing','Цены','Диагностика, стандарт, сложный ремонт'],
+    ['#faq','Частые вопросы','Ответы на популярные'],
+    ['#reviews','Отзывы','Что говорят клиенты'],
+    ['#request','Оставить заявку','Перезвоним за 15 минут'],
+    ['#map','Как нас найти','Карта']
+  ];
+  var searchModal = document.getElementById('searchModal');
+  var searchInput = document.getElementById('searchInput');
+  var searchResults = document.getElementById('searchResults');
+  var searchIdx = 0;
+  function openSearch(){
+    searchModal.classList.add('open');
+    document.body.classList.add('modal-open');
+    searchInput.value=''; renderSearch(''); searchInput.focus();
+  }
+  function closeSearch(){
+    searchModal.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+  function renderSearch(q){
+    q = q.toLowerCase();
+    var list = searchTargets.filter(function(t){
+      return !q || t[1].toLowerCase().indexOf(q) > -1 || t[2].toLowerCase().indexOf(q) > -1;
+    });
+    searchIdx = 0;
+    searchResults.innerHTML = list.length
+      ? list.map(function(t,i){
+          return '<a href="'+t[0]+'" data-i="'+i+'"><span>'+t[1]+'</span><small>'+t[2]+'</small></a>';
+        }).join('')
+      : '<a>Ничего не найдено</a>';
+    searchResults._list = list;
+    highlight();
+  }
+  function highlight(){
+    var as = searchResults.querySelectorAll('a');
+    as.forEach(function(a,i){ a.style.background = i===searchIdx ? 'var(--bg-soft)' : ''; });
+  }
+  document.getElementById('searchBtn').addEventListener('click', openSearch);
+  searchModal.addEventListener('click', function(e){ if (e.target === searchModal) closeSearch(); });
+  searchInput.addEventListener('input', function(){ renderSearch(this.value); });
+  searchInput.addEventListener('keydown', function(e){
+    var as = searchResults.querySelectorAll('a');
+    if (!as.length) return;
+    if (e.key === 'ArrowDown') { searchIdx = (searchIdx+1)%as.length; highlight(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { searchIdx = (searchIdx-1+as.length)%as.length; highlight(); e.preventDefault(); }
+    else if (e.key === 'Enter') { var a = as[searchIdx]; if (a && a.dataset.i) { closeSearch(); a.click(); } }
+  });
+  searchResults.addEventListener('click', function(){ closeSearch(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === '/' && !searchModal.classList.contains('open') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault(); openSearch();
+    }
+    if (e.key === 'Escape') {
+      if (searchModal.classList.contains('open')) closeSearch();
+      if (document.getElementById('storyModal').classList.contains('open')) closeModal();
+    }
+  });
+
+  // Stories
+  var stories = [
+    { id:1, tag:'Ноутбук', title:'Lenovo G50 — перегрев и выключения', img:'https://i.ibb.co/wh8ZTy37/laptop.jpg', alt:'Ноутбук со снятой крышкой, чистка от пыли', broken:'Ноутбук выключался через 20–30 минут работы, вентиляторы шумели, корпус снизу был горячим.', found:'Забитый пылью радиатор, засохшая термопаста. Температура в простое — 78 °C.', fixed:'Полная разборка охлаждения, ультразвуковая чистка радиатора, замена термопасты на Arctic MX-4.', result:'Готов за 2 часа', price:'1 800 ₽', brief:'Чистка и замена термопасты' },
+    { id:2, tag:'Усилитель', title:'Marantz PM6005 — пропадал правый канал', img:'https://i.ibb.co/2VjcchJ/solder.jpg', alt:'Пайка компонентов на плате усилителя', broken:'Правый канал то появлялся, то исчезал, особенно на тихой громкости.', found:'Микротрещина в пайке выходного транзистора. Симптом плавающий из-за нагрева.', fixed:'Перепайка транзистора с заменой припоя, проверка электролитов, профилактика потенциометра.', result:'Готов за 2 дня', price:'2 400 ₽', brief:'Перепайка выходного транзистора' },
+    { id:3, tag:'Стиральная машина', title:'Bosch Maxx 5 — гул при отжиме', img:'https://i.ibb.co/mr3sX7Dy/shop.jpg', alt:'Стиральная машина на верстаке со снятой панелью', broken:'При отжиме — сильный гул и вибрация на 1000 об/мин. Машине 8 лет.', found:'Износ подшипников барабана и сальника. Вода попадала на подшипники 2–3 года.', fixed:'Замена обоих подшипников и сальника на SKF, промывка бака, замена приводного ремня.', result:'Готов за 1 день', price:'3 500 ₽', brief:'Замена подшипников барабана' },
+    { id:4, tag:'Кофемашина', title:'De\'Longhi Magnifica — не варит кофе', img:null, imgClass:'c1', imgText:'Кофемашина<br>De\'Longhi', broken:'Машина набирает воду, гудит, но кофе не льётся. Индикатор накипи не гаснет.', found:'Помпа проскальзывала под нагрузкой. Клапан блока подклинивал из-за накипи.', fixed:'Замена помпы на оригинальную, промывка гидросистемы, декальцинация, замена уплотнителей.', result:'Готов за 1 день', price:'4 200 ₽', brief:'Замена помпы и промывка' },
+    { id:5, tag:'Холодильник', title:'Liebherr CN 4003 — не морозит морозилка', img:null, imgClass:'c2', imgText:'Холодильник<br>Liebherr', broken:'В холодильной камере +5 °C, в морозилке −8 °C вместо −18. Компрессор работает без остановки.', found:'Забит капиллярный фильтр-осушитель. Утечки фреона нет.', fixed:'Замена фильтр-осушителя, вакуумирование, заправка фреоном по весам, проверка термостата.', result:'Готов за 3 дня', price:'5 800 ₽', brief:'Замена фильтра и заправка' },
+    { id:6, tag:'Винил', title:'Technics SL-1200 — нестабильная скорость', img:null, imgClass:'c3', imgText:'Виниловый<br>Technics', broken:'На 33⅓ оборотах диск периодически замедлялся, особенно на тяжёлых пластинках.', found:'Износ щёток двигателя и загрязнение контактов строба.', fixed:'Замена щёток, чистка стробоскопа, замена потенциометра, юстировка тонарма.', result:'Готов за 5 дней', price:'6 500 ₽', brief:'Замена щёток и профилактика' }
+  ];
+  var storiesEl = document.getElementById('stories');
+  stories.forEach(function(s){
+    var card = document.createElement('div');
+    card.className = 'story-card reveal';
+    card.setAttribute('data-id', s.id);
+    var ph = s.img
+      ? '<img src="'+s.img+'" alt="'+s.alt+'" width="800" height="600" loading="lazy">'
+      : '<div class="story-ph-css '+s.imgClass+'">'+s.imgText+'</div>';
+    card.innerHTML = '<div class="story-ph">'+ph+'</div><div class="story-body"><span class="tag">'+s.tag+'</span><h3>'+s.title+'</h3><p>'+s.brief+'</p><div class="story-meta"><span>'+s.result+'</span><span>'+s.price+'</span></div></div>';
+    storiesEl.appendChild(card);
+  });
+
+  // Modal
+  var modal = document.getElementById('storyModal');
+  var modalImg = document.getElementById('modalImg');
+  var modalTag = document.getElementById('modalTag');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalSections = document.getElementById('modalSections');
+  var modalResult = document.getElementById('modalResult');
+  var modalApply = document.getElementById('modalApply');
+  function openModal(id){
+    var s = stories.find(function(x){ return x.id === id; });
+    if (!s) return;
+    modalImg.innerHTML = s.img
+      ? '<img src="'+s.img+'" alt="'+s.alt+'" width="1200" height="675">'
+      : '<div class="story-ph-css '+s.imgClass+'" style="aspect-ratio:16/9">'+s.imgText+'</div>';
+    modalTag.textContent = s.tag;
+    modalTitle.textContent = s.title;
+    modalSections.innerHTML =
+      '<div><h4>Что сломалось</h4><p>'+s.broken+'</p></div>'+
+      '<div><h4>Что нашли</h4><p>'+s.found+'</p></div>'+
+      '<div><h4>Как чинили</h4><p>'+s.fixed+'</p></div>'+
+      '<div><h4>Результат</h4><p>'+s.result+', гарантия 6 месяцев.</p></div>';
+    modalResult.innerHTML = '<b>'+s.price+'</b><span>'+s.result+'</span>';
+    modalApply.dataset.issue = s.tag+': '+s.brief;
+    modal.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+  storiesEl.addEventListener('click', function(e){
+    var card = e.target.closest('.story-card');
+    if (card) openModal(parseInt(card.dataset.id,10));
+  });
+  modal.addEventListener('click', function(e){
+    if (e.target === modal || e.target.classList.contains('modal-close')) closeModal();
+  });
+  modalApply.addEventListener('click', function(){
+    var issue = document.getElementById('issue');
+    if (issue && !issue.value) issue.value = modalApply.dataset.issue;
+  });
+
+  // Booking
+  var days = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+  var bookingDays = document.getElementById('bookingDays');
+  var bookingSlots = document.getElementById('bookingSlots');
+  var bookingService = document.getElementById('bookingService');
+  var bookingConfirm = document.getElementById('bookingConfirm');
+  var bookingInfo = document.getElementById('bookingInfo');
+  var selectedDate = null, selectedTime = null;
+  var today = new Date();
+  for (var i=0; i<7; i++){
+    var d = new Date(today); d.setDate(today.getDate()+i);
+    var btn = document.createElement('button');
+    btn.className = 'booking-day'; btn.type = 'button';
+    btn.dataset.date = d.toISOString().slice(0,10);
+    btn.innerHTML = '<small>'+(i===0?'Сегодня':days[d.getDay()])+'</small><b>'+d.getDate()+'.'+String(d.getMonth()+1).padStart(2,'0')+'</b>';
+    if (i===0) btn.classList.add('active'), selectedDate = btn.dataset.date;
+    btn.addEventListener('click', function(){
+      bookingDays.querySelectorAll('.booking-day').forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      selectedDate = this.dataset.date; selectedTime = null;
+      renderSlots(); updateConfirm();
+    });
+    bookingDays.appendChild(btn);
+  }
+  function renderSlots(){
+    bookingSlots.innerHTML = '';
+    for (var h=10; h<=19; h++){
+      var slot = document.createElement('button');
+      slot.className = 'slot'; slot.type = 'button';
+      slot.textContent = h + ':00';
+      // Simulate some busy slots
+      if ((h + new Date(selectedDate).getDate()) % 4 === 0) slot.classList.add('taken');
+      slot.addEventListener('click', function(){
+        if (this.classList.contains('taken')) return;
+        bookingSlots.querySelectorAll('.slot').forEach(function(s){ s.classList.remove('active'); });
+        this.classList.add('active');
+        selectedTime = this.textContent;
+        updateConfirm();
+      });
+      bookingSlots.appendChild(slot);
+    }
+  }
+  function updateConfirm(){
+    if (selectedDate && selectedTime && bookingService.value){
+      bookingInfo.innerHTML = 'Вы записаны на <b>'+selectedDate+'</b> в <b>'+selectedTime+'</b>. Услуга: <b>'+bookingService.value+'</b>.';
+      bookingConfirm.classList.add('show');
+    } else {
+      bookingConfirm.classList.remove('show');
+    }
+  }
+  bookingService.addEventListener('change', updateConfirm);
+  document.getElementById('bookingSubmit').addEventListener('click', function(){
+    var issue = document.getElementById('issue');
+    if (!issue.value) issue.value = 'Запись на '+selectedDate+' в '+selectedTime+', услуга: '+bookingService.value+'.';
+    location.hash = '#request';
+  });
+  renderSlots();
+
+  // Calculator
+  var calcData = {
+    appliances:{label:'Бытовая техника',devices:{
+      washing:{label:'Стиральная машина',symptoms:{noslip:'Не сливает воду',nogate:'Не отжимает',noise:'Гудит при отжиме',noheat:'Не греет воду'}},
+      fridge:{label:'Холодильник',symptoms:{nowarm:'Не морозит морозилка',noise:'Стучит компрессор',leak:'Течёт вода'}},
+      dish:{label:'Посудомоечная машина',symptoms:{nowash:'Не моет',noslip:'Не сливает воду'}}
+    }},
+    electronics:{label:'Электроника',devices:{
+      tv:{label:'Телевизор',symptoms:{black:'Не включается',lines:'Полосы на экране'}},
+      amp:{label:'Усилитель',symptoms:{channel:'Пропадает канал',hum:'Фон в колонках'}},
+      vinyl:{label:'Виниловый проигрыватель',symptoms:{speed:'Нестабильная скорость'}}
+    }},
+    laptops:{label:'Ноутбуки',devices:{
+      office:{label:'Офисный ноутбук',symptoms:{overheat:'Перегревается',slow:'Тормозит'}},
+      liquid:{label:'После залития',symptoms:{liquid:'Залили жидкостью',noOn:'Не включается'}}
+    }}
+  };
+  var priceMap = {
+    'appliances.washing.noslip':[1800,2500,'Обычно помпа или засор фильтра.'],
+    'appliances.washing.nogate':[2200,3200,'Щётки двигателя, таходатчик.'],
+    'appliances.washing.noise':[3200,4500,'Износ подшипников барабана.'],
+    'appliances.washing.noheat':[1500,2200,'Обычно ТЭН.'],
+    'appliances.fridge.nowarm':[4500,6800,'Замена фильтра и заправка фреоном.'],
+    'appliances.fridge.noise':[2800,4200,'Компрессор или вентилятор.'],
+    'appliances.fridge.leak':[1800,3200,'Прочистка дренажа.'],
+    'appliances.dish.nowash':[2000,3200,'Форсунки или ТЭН.'],
+    'appliances.dish.noslip':[1800,2500,'Сливная помпа.'],
+    'electronics.tv.black':[3500,6500,'Блок питания или подсветка.'],
+    'electronics.tv.lines':[4000,8500,'Шлейф матрицы или T-Con.'],
+    'electronics.amp.channel':[2200,3800,'Пайка, выходные транзисторы.'],
+    'electronics.amp.hum':[2000,3500,'Конденсаторы блока питания.'],
+    'electronics.vinyl.speed':[3500,6500,'Замена щёток, чистка строба.'],
+    'laptops.office.overheat':[1800,2500,'Чистка + замена термопасты.'],
+    'laptops.office.slow':[2500,4500,'Установка SSD, чистка ОС.'],
+    'laptops.liquid.liquid':[3500,12000,'Чистка под микроскопом.'],
+    'laptops.liquid.noOn':[4500,12000,'Поиск КЗ, замена элементов.']
+  };
+  var calcCats = document.getElementById('calcCats');
+  var calcDevice = document.getElementById('calcDevice');
+  var calcSymptom = document.getElementById('calcSymptom');
+  var calcResult = document.getElementById('calcResult');
+  var calcPrice = document.getElementById('calcPrice');
+  var calcDesc = document.getElementById('calcDesc');
+  var calcEmpty = document.getElementById('calcEmpty');
+  var calcApply = document.getElementById('calcApply');
+  var curCat = null;
+  function fmt(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+  function updateCalc(){
+    var d = calcDevice.value, s = calcSymptom.value;
+    if (!curCat || !d || !s) { calcResult.classList.remove('show'); calcEmpty.style.display=''; return; }
+    var data = priceMap[curCat+'.'+d+'.'+s];
+    if (!data) return;
+    calcPrice.innerHTML = 'от '+fmt(data[0])+' до '+fmt(data[1])+' ₽<small>точная цена — после диагностики</small>';
+    calcDesc.textContent = data[2];
+    calcResult.classList.add('show');
+    calcEmpty.style.display = 'none';
+    calcApply.dataset.issue = calcData[curCat].devices[d].label+' — '+calcData[curCat].devices[d].symptoms[s]+'. Вилка: '+fmt(data[0])+'–'+fmt(data[1])+' ₽.';
+  }
+  calcCats.addEventListener('click', function(e){
+    var btn = e.target.closest('.calc-cat');
+    if (!btn) return;
+    curCat = btn.dataset.cat;
+    calcCats.querySelectorAll('.calc-cat').forEach(function(b){ b.classList.toggle('active', b===btn); });
+    calcDevice.disabled = false;
+    calcDevice.innerHTML = '<option value="">— выберите устройство —</option>';
+    for (var k in calcData[curCat].devices) {
+      var o = document.createElement('option');
+      o.value = k; o.textContent = calcData[curCat].devices[k].label;
+      calcDevice.appendChild(o);
+    }
+    calcSymptom.disabled = true;
+    calcSymptom.innerHTML = '<option value="">— сначала устройство —</option>';
+    updateCalc();
+  });
+  calcDevice.addEventListener('change', function(){
+    if (!calcDevice.value) { calcSymptom.disabled = true; calcSymptom.innerHTML = '<option value="">— сначала устройство —</option>'; updateCalc(); return; }
+    calcSymptom.disabled = false;
+    calcSymptom.innerHTML = '<option value="">— выберите симптом —</option>';
+    var syms = calcData[curCat].devices[calcDevice.value].symptoms;
+    for (var k in syms) { var o = document.createElement('option'); o.value = k; o.textContent = syms[k]; calcSymptom.appendChild(o); }
+    updateCalc();
+  });
+  calcSymptom.addEventListener('change', updateCalc);
+  calcApply.addEventListener('click', function(){
+    var issue = document.getElementById('issue');
+    if (issue && !issue.value) issue.value = calcApply.dataset.issue;
+  });
+
+  // Warranty check
+  var warrantyData = {
+    'TV-2847':{device:'Усилитель Marantz PM6005',start:'2026-09-15',end:'2027-03-15',work:'Перепайка выходного транзистора'},
+    'TV-1234':{device:'Стиральная машина Bosch Maxx 5',start:'2026-10-01',end:'2027-04-01',work:'Замена подшипников барабана'},
+    'TV-9912':{device:'Ноутбук Lenovo G50',start:'2026-08-20',end:'2027-02-20',work:'Чистка и замена термопасты'}
+  };
+  document.getElementById('warrantyForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var val = document.getElementById('warrantyInput').value.trim().toUpperCase();
+    var res = document.getElementById('warrantyResult');
+    var data = warrantyData[val];
+    if (!data) {
+      res.innerHTML = '<div style="background:#fbe9e7;color:#8a2a1e;padding:14px 18px;border-radius:10px;font-size:.95em">Заявка не найдена. Проверьте номер или позвоните нам.</div>';
+      res.classList.add('show');
+      return;
+    }
+    var todayStr = new Date().toISOString().slice(0,10);
+    var active = todayStr <= data.end;
+    res.innerHTML = '<div class="warranty-ticket">'+
+      '<h3>'+data.device+'</h3>'+
+      '<div class="row"><span>Номер заявки:</span><b>'+val+'</b></div>'+
+      '<div class="row"><span>Работа:</span><b>'+data.work+'</b></div>'+
+      '<div class="row"><span>Дата ремонта:</span><b>'+data.start+'</b></div>'+
+      '<div class="row"><span>Гарантия действует до:</span><b>'+data.end+'</b></div>'+
+      '<div class="row"><span>Статус:</span><b style="color:'+(active?'#4caf50':'#b85a4a')+'">'+(active?'✓ Гарантия активна':'Гарантия истекла')+'</b></div>'+
+      '<div class="warranty-actions">'+
+        '<a href="#request" class="btn btn-secondary" data-issue="Гарантийный случай по заявке '+val+'">Сообщить о поломке</a>'+
+        '<a href="tel:+74951234567" class="btn btn-primary">Позвонить мастеру</a>'+
+      '</div></div>';
+    res.classList.add('show');
+  });
+
+  // Parts
+  var partsList = [
+    {cat:'Стиральные машины', name:'Помпа сливная (универсальная)', price:'1 400 ₽'},
+    {cat:'Стиральные машины', name:'ТЭН 1800 Вт', price:'950 ₽'},
+    {cat:'Холодильники', name:'Фильтр-осушитель', price:'650 ₽'},
+    {cat:'Ноутбуки', name:'Термопаста Arctic MX-4', price:'800 ₽'},
+    {cat:'Электроника', name:'Набор конденсаторов (470 мкФ)', price:'350 ₽'},
+    {cat:'Кофемашины', name:'Уплотнители заварочного блока', price:'550 ₽'}
+  ];
+  var partsEl = document.getElementById('parts');
+  partsList.forEach(function(p){
+    var div = document.createElement('div');
+    div.className = 'part reveal';
+    div.innerHTML = '<span class="cat">'+p.cat+'</span><h3>'+p.name+'</h3><div class="price">'+p.price+'</div><a href="#request" class="btn btn-secondary" data-issue="Заказ запчасти: '+p.name+'">Заказать</a>';
+    partsEl.appendChild(div);
+  });
+
+  // Pre-fill from data-issue buttons
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-issue]');
+    if (!btn) return;
+    var issue = document.getElementById('issue');
+    if (issue && !issue.value) issue.value = btn.dataset.issue;
+  });
+
+  // Voice recording
+  var voiceBtn = document.getElementById('voiceBtn');
+  var voicePlayer = document.getElementById('voicePlayer');
+  var voiceAudio = document.getElementById('voiceAudio');
+  var mediaRecorder = null, chunks = [];
+  voiceBtn.addEventListener('click', function(){
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Ваш браузер не поддерживает запись аудио.');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      mediaRecorder = new MediaRecorder(stream);
+      chunks = [];
+      mediaRecorder.ondataavailable = function(e){ chunks.push(e.data); };
+      mediaRecorder.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        var blob = new Blob(chunks, {type:'audio/webm'});
+        voiceAudio.src = URL.createObjectURL(blob);
+        voicePlayer.classList.add('show');
+        voiceBtn.classList.remove('recording');
+        voiceBtn.textContent = '🎤 Записать заново';
+      };
+      mediaRecorder.start();
+      voiceBtn.classList.add('recording');
+      voiceBtn.textContent = '⏹ Остановить запись';
+      setTimeout(function(){
+        if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+      }, 30000);
+    }).catch(function(){
+      alert('Не удалось получить доступ к микрофону.');
+    });
+  });
+
+  // Form
+  var form = document.getElementById('requestForm');
+  var ok = document.getElementById('formOk');
+  form.addEventListener('submit', function(ev){
+    var name = form.name.value.trim();
+    var phone = form.phone.value.trim();
+    var issue = form.issue.value.trim();
+    if (!name || !phone || !issue) {
+      ev.preventDefault();
+      ok.textContent = 'Пожалуйста, заполните все поля.';
+      ok.style.background = '#fbe9e7'; ok.style.color = '#8a2a1e'; ok.style.borderColor = '#eab9b0';
+      ok.classList.add('show');
+      return;
+    }
+    if (form.action.indexOf('your@email.com') !== -1) {
+      ev.preventDefault();
+      ok.textContent = 'Спасибо, '+name+'! Заявка принята, мастер перезвонит в течение 15 минут. (Демо: настройте action на реальный email.)';
+      ok.style.background = ''; ok.style.color = ''; ok.style.borderColor = '';
+      ok.classList.add('show');
+      form.reset();
+      return;
+    }
+    ok.textContent = 'Спасибо, '+name+'! Заявка отправлена.';
+    ok.classList.add('show');
+  });
+
+  var phone = document.getElementById('phone');
+  phone.addEventListener('input', function(e){
+    var d = e.target.value.replace(/\D/g,'').slice(0,11);
+    if (!d) { e.target.value=''; return; }
+    if (d[0] === '8') d = '7' + d.slice(1);
+    if (d[0] !== '7') d = '7' + d;
+    var r = '+7';
+    if (d.length > 1) r += ' (' + d.slice(1,4);
+    if (d.length >= 5) r += ') ' + d.slice(4,7);
+    if (d.length >= 8) r += '-' + d.slice(7,9);
+    if (d.length >= 10) r += '-' + d.slice(9,11);
+    e.target.value = r;
+  });
+})();
+</script>
 </body>
 </html>
