@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ремонт техники за 1 день — «Тихий винт», Москва</title>
+<meta name="description" content="Ремонт бытовой техники, электроники и ноутбуков в Москве. Бесплатная диагностика в будни, цена до начала работ, гарантия 6 месяцев.">
+<meta name="theme-color" content="#0f3d2e">
+<style>
+:root{--ink:#14201b;--soft:#4d5c55;--line:#d9e2dd;--accent:#0f6b4a;--bg:#fff;--bg2:#f3f7f4;--radius:12px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.55 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+header{border-bottom:1px solid var(--line);background:#fff}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.2px;text-decoration:none;color:var(--ink)}
+.logo span{color:var(--accent)}
+.hact{display:flex;align-items:center;gap:14px;font-size:14px}
+.hact a{text-decoration:none;font-weight:600}
+.btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:700;text-decoration:none;border:2px solid transparent;font-size:16px;cursor:pointer}
+.btn-main{background:var(--accent);color:#fff}
+.btn-main:hover{background:#0b5439}
+.btn-ghost{border-color:var(--accent);color:var(--accent);background:#fff}
+.hero{padding:34px 0 26px}
+.hgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}
+.promo{display:inline-block;background:#e8f4ee;color:#0b5439;font-size:13px;font-weight:700;padding:6px 11px;border-radius:999px;margin-bottom:14px}
+h1{font-size:clamp(27px,4vw,42px);line-height:1.13;margin:0 0 14px;letter-spacing:-.6px}
+h1 span{color:var(--accent)}
+.lead{font-size:17px;color:var(--soft);margin:0 0 22px;max-width:34em}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.note{margin-top:14px;font-size:13px;color:var(--soft)}
+.hero img{border-radius:var(--radius);aspect-ratio:4/3;object-fit:cover;width:100%}
+section{padding:26px 0}
+h2{font-size:clamp(21px,2.6vw,28px);margin:0 0 6px;letter-spacing:-.3px}
+.sub{color:var(--soft);margin:0 0 18px;font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:16px;background:#fff}
+.card h3{font-size:16px;margin:0 0 6px}
+.card p{margin:0;color:var(--soft);font-size:14px}
+.price{margin-top:10px;font-weight:800;color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.step{background:var(--bg2);border-radius:var(--radius);padding:16px}
+.step b{display:block;font-size:15px;margin-bottom:4px}
+.step span{color:var(--soft);font-size:14px}
+.step::before{counter-increment:s;content:"Шаг " counter(s);display:block;font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.cta{background:var(--bg2);border-radius:16px;padding:clamp(18px,3vw,30px);display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+form{display:grid;gap:10px}
+label{font-size:13px;font-weight:600;color:var(--soft)}
+input,textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+input:focus,textarea:focus{outline:2px solid #bfe0d1;border-color:var(--accent)}
+textarea{resize:vertical;min-height:74px}
+.ok{display:none;padding:11px 13px;border-radius:10px;background:#e6f5ec;color:#0b5439;border:1px solid #b7e0c8;font-size:14px}
+.ok.show{display:block}
+.ok.err{background:#fdecea;color:#8a2a1e;border-color:#f0bdb5}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:20px 0;color:var(--soft);font-size:13px}
+@media(max-width:860px){.hgrid,.cta,.cards,.steps{grid-template-columns:1fr}.hero{padding-top:22px}.hero img{aspect-ratio:16/9}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hrow">
+    <a class="logo" href="#top">Тихий <span>винт</span></a>
+    <div class="hact">
+      <a href="#request" class="btn btn-main" style="padding:10px 16px">Заявка</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="hgrid">
+      <div>
+        <span class="promo">Диагностика бесплатно в будни до 12:00</span>
+        <h1>Ремонт техники за 1 день — <span>цена до начала работ</span></h1>
+        <p class="lead">Бытовая техника, электроника, ноутбуки. Называем цену после бесплатной диагностики и не меняем её потом. Не починили — денег не взяли. Гарантия 6 месяцев.</p>
+        <div class="actions">
+          <a href="#request" class="btn btn-main">Записаться на диагностику</a>
+          <a href="#services" class="btn btn-ghost">Цены и услуги</a>
+        </div>
+        <p class="note">Мастерская в Москве с 2014 года · 8 400+ устройств починено · выезд по городу</p>
+      </div>
+      <img src="https://i.ibb.co/mr3sX7Dy/shop.jpg" alt="Мастерская «Тихий винт»: верстаки и инструмент" width="1200" height="900" loading="eager" fetchpriority="high">
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <h2>Что ремонтируем</h2>
+      <p class="sub">Три направления, по которым работаем каждый день.</p>
+      <div class="cards">
+        <article class="card"><h3>Бытовая техника</h3><p>Стиральные и посудомоечные машины, холодильники, духовки. Подшипники, ТЭНы, помпы, модули.</p><div class="price">от 1 200 ₽</div></article>
+        <article class="card"><h3>Электроника</h3><p>Телевизоры, мониторы, аудиотехника, усилители. Пайка SMD, конденсаторы, цепи питания.</p><div class="price">от 900 ₽</div></article>
+        <article class="card"><h3>Ноутбуки</h3><p>Чистка, замена матриц и клавиатур, термоинтерфейс, восстановление после залития.</p><div class="price">от 700 ₽</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Как проходит ремонт</h2>
+      <p class="sub">Без сюрпризов в счёте: цена фиксируется до начала работ.</p>
+      <div class="steps">
+        <div class="step"><b>Заявка и диагностика</b><span>Отвечаем в течение 15 минут, смотрим технику бесплатно в будни до 12:00.</span></div>
+        <div class="step"><b>Цена и срок</b><span>Называем точную сумму и срок — обычно 1 день. Согласуем с вами.</span></div>
+        <div class="step"><b>Ремонт и гарантия</b><span>Чиним, проверяем при вас, отдаём с гарантией 6 месяцев.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="request">
+    <div class="wrap">
+      <div class="cta">
+        <div>
+          <h2>Оставьте заявку</h2>
+          <p class="sub">Перезвоним в течение 15 минут в рабочее время и скажем, сколько будет стоить ремонт.</p>
+          <p class="sub" style="margin-bottom:0">Москва, ул. Мастеровая, 12<br>Пн–Сб 10:00–20:00, Вс 11:00–17:00</p>
+        </div>
+        <form id="requestForm" action="https://formsubmit.co/ajax/fominignatBLG@gmail.com" method="POST" novalidate>
+          <div><label for="name">Как к вам обращаться</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+          <div><label for="phone">Телефон</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
+          <div><label for="issue">Что случилось</label><textarea id="issue" name="issue" required></textarea></div>
+          <button class="btn btn-main" type="submit">Отправить заявку</button>
+          <div class="ok" id="formOk" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Мастерская «Тихий винт». Москва. Цены указаны за работу без стоимости деталей.</div>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('requestForm');
+  var ok = document.getElementById('formOk');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var name = form.name.value.trim(), phone = form.phone.value.trim(), issue = form.issue.value.trim();
+    ok.className = 'ok';
+    if(!name || !phone || !issue){
+      ok.textContent = 'Заполните все три поля — так мастер сразу поймёт, что случилось.';
+      ok.classList.add('show','err');
+      return;
+    }
+    var btn = form.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'Отправляем…';
+    var data = new FormData(form);
+    data.append('_subject','Заявка с сайта «Тихий винт» (лёгкая версия)');
+    data.append('_template','table');
+    data.append('_captcha','false');
+    fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
+      .then(function(r){ return r.json(); })
+      .then(function(){
+        ok.textContent = 'Спасибо, ' + name + '! Заявка принята, перезвоним в течение 15 минут.';
+        ok.classList.add('show');
+        form.reset();
+      })
+      .catch(function(){
+        ok.textContent = 'Не удалось отправить. Попробуйте ещё раз через минуту.';
+        ok.classList.add('show','err');
+      })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Отправить заявку'; });
+  });
+})();
+</script>
+</body>
+</html>
