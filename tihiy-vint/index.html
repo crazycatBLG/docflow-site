@@ -507,6 +507,60 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
   .wa-float{width:52px;height:52px}
   .wa-float svg{width:24px;height:24px}
 }
+/* ===== Квиз-калькулятор (урок 2) ===== */
+.quiz-launch{display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,3vw,28px);box-shadow:var(--shadow)}
+.quiz-launch h3{margin:0 0 6px;font-size:clamp(1.05rem,2vw,1.3rem)}
+.quiz-launch p{margin:0;color:var(--ink-soft);max-width:52ch;line-height:1.55}
+.quiz-launch .btn{flex:0 0 auto}
+
+.quiz{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+.quiz.is-open{display:flex}
+.quiz__backdrop{position:absolute;inset:0;background:rgba(12,18,14,.58);backdrop-filter:blur(3px)}
+.quiz__panel{position:relative;width:100%;max-width:580px;max-height:92vh;overflow:auto;background:var(--white);color:var(--ink);border-radius:18px;box-shadow:0 30px 80px -30px rgba(0,0,0,.55);padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:16px}
+.quiz__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.quiz__step{font-size:.85em;color:var(--ink-soft);letter-spacing:.02em}
+.quiz__close{background:none;border:0;font-size:1.6rem;line-height:1;color:var(--ink-soft);cursor:pointer;padding:2px 8px;border-radius:8px}
+.quiz__close:hover{background:var(--bg-soft);color:var(--ink)}
+.quiz__bar{height:5px;border-radius:99px;background:var(--bg-soft);overflow:hidden}
+.quiz__bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.quiz__title{margin:2px 0 0;font-size:clamp(1.15rem,2.6vw,1.45rem);line-height:1.25}
+.quiz__hint{margin:0;color:var(--ink-soft);font-size:.94em;line-height:1.5}
+.quiz__opts{display:flex;flex-direction:column;gap:9px;margin-top:2px}
+.quiz__opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:13px 16px;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.quiz__opt:hover{border-color:var(--accent);background:var(--bg)}
+.quiz__opt:active{transform:scale(.995)}
+.quiz__opt.is-active{border-color:var(--accent);background:var(--bg-soft);font-weight:600}
+.quiz__opt small{display:block;font-weight:400;color:var(--ink-soft);font-size:.86em;margin-top:3px}
+.quiz__opt .arrow{color:var(--ink-soft);flex:0 0 auto}
+.quiz__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.quiz__back{background:none;border:0;color:var(--ink-soft);font:inherit;cursor:pointer;padding:8px 4px}
+.quiz__back:hover{color:var(--ink);text-decoration:underline}
+.quiz__back[hidden]{visibility:hidden}
+.quiz__price{font-size:clamp(1.5rem,4.5vw,2rem);font-weight:700;line-height:1.15}
+.quiz__price small{display:block;font-size:.5em;font-weight:400;color:var(--ink-soft);margin-top:6px}
+.quiz__list{margin:0;padding-left:18px;color:var(--ink-soft);font-size:.94em;line-height:1.6}
+.quiz__list li{margin-bottom:2px}
+.quiz__row{display:flex;gap:10px;flex-wrap:wrap}
+.quiz__field{flex:1 1 190px;display:flex;flex-direction:column;gap:6px}
+.quiz__field label{font-size:.85em;color:var(--ink-soft)}
+.quiz__field input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.quiz__field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.quiz__note{font-size:.8em;color:var(--ink-soft);line-height:1.45}
+.quiz__msg{display:none;padding:10px 14px;border-radius:10px;font-size:.92em;line-height:1.45}
+.quiz__msg.is-err{display:block;background:#fbe9e7;color:#8a2a1e}
+.quiz__msg.is-ok{display:block;background:#e6f0e8;color:#245039}
+.quiz__done{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.quiz__check{width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:1.4rem}
+@media (max-width:640px){
+  .quiz{padding:0}
+  .quiz__panel{max-width:none;max-height:none;height:100%;border-radius:0;justify-content:flex-start}
+  .quiz-launch{flex-direction:column;align-items:stretch;text-align:left}
+  .quiz-launch .btn{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .quiz__bar span{transition:none}
+  .quiz__opt{transition:none}
+}
 </style>
 </head>
 <body>
@@ -541,7 +595,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
         <p class="hero-lead">Мастерская в Москве с 2014 года: бытовая техника, электроника, ноутбуки. Называем цену после бесплатной диагностики и не меняем её потом. Не починили — денег не взяли.</p>
         <div class="hero-actions">
           <a href="#request" class="btn btn-primary">Записаться на диагностику</a>
-          <a href="#calc" class="btn btn-secondary">Узнать цену за 30 секунд</a>
+          <a href="#calc" class="btn btn-secondary" data-quiz-open>Узнать цену за 30 секунд</a>
         </div>
       </div>
       <div class="hero-photo reveal">
@@ -580,32 +634,15 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
 
   <section id="calc" style="background:var(--bg-soft)">
     <div class="container">
-      <h2 class="section-title reveal">Калькулятор стоимости</h2>
-      <p class="section-lead reveal">Узнайте ориентировочную цену и срок ремонта за 30 секунд.</p>
-      <div class="calc reveal">
-        <div class="calc-steps">
-          <div class="calc-step">
-            <div class="calc-step-head"><div class="calc-step-num">1</div>Тип техники</div>
-            <div class="calc-cats" id="calcCats">
-              <button class="calc-cat" type="button" data-cat="appliances">Бытовая техника</button>
-              <button class="calc-cat" type="button" data-cat="electronics">Электроника</button>
-              <button class="calc-cat" type="button" data-cat="laptops">Ноутбуки</button>
-            </div>
-          </div>
-          <div class="calc-step">
-            <div class="calc-step-head"><div class="calc-step-num">2</div>Устройство</div>
-            <select id="calcDevice" disabled><option value="">— выберите тип —</option></select>
-          </div>
-          <div class="calc-step">
-            <div class="calc-step-head"><div class="calc-step-num">3</div>Симптом</div>
-            <select id="calcSymptom" disabled><option value="">— сначала устройство —</option></select>
-          </div>
+      <h2 class="section-title reveal">Квиз-калькулятор: цена за 30 секунд</h2>
+      <p class="section-lead reveal">Четыре вопроса — вилка цены, срок и запись. Без звонка и регистрации.</p>
+      <div class="quiz-launch reveal">
+        <div>
+          <h3>Что случилось и сколько это стоит</h3>
+          <p>Выберите тип техники, устройство и симптом, укажите срочность — покажем вилку по нашим прайсам 2026 года,
+             срок работы и запишем на удобное время. Точную цену назовём после бесплатной диагностики.</p>
         </div>
-        <div class="calc-result" id="calcResult">
-          <div><div class="calc-result-price" id="calcPrice"></div><div class="calc-result-desc" id="calcDesc"></div></div>
-          <a href="#request" class="btn btn-primary" id="calcApply">Оставить заявку</a>
-        </div>
-        <div class="calc-empty" id="calcEmpty">Выберите тип техники, устройство и симптом — покажем ориентировочную стоимость.</div>
+        <button class="btn btn-primary" type="button" data-quiz-open>Подобрать ремонт</button>
       </div>
     </div>
   </section>
@@ -1102,6 +1139,8 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     'laptops.liquid.liquid':[3500,12000,'Чистка под микроскопом.'],
     'laptops.liquid.noOn':[4500,12000,'Поиск КЗ, замена элементов.']
   };
+  // данные нужны квизу-калькулятору (урок 2): шаги, прайс, форматирование
+  window.__calc = { calcData: calcData, priceMap: priceMap, fmt: fmt };
   var calcCats = document.getElementById('calcCats');
   var calcDevice = document.getElementById('calcDevice');
   var calcSymptom = document.getElementById('calcSymptom');
@@ -1123,6 +1162,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     calcEmpty.style.display = 'none';
     calcApply.dataset.issue = calcData[curCat].devices[d].label+' — '+calcData[curCat].devices[d].symptoms[s]+'. Вилка: '+fmt(data[0])+'–'+fmt(data[1])+' ₽.';
   }
+  if (calcCats && calcDevice && calcSymptom && calcResult && calcPrice && calcApply) {
   calcCats.addEventListener('click', function(e){
     var btn = e.target.closest('.calc-cat');
     if (!btn) return;
@@ -1152,6 +1192,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     var issue = document.getElementById('issue');
     if (issue && !issue.value) issue.value = calcApply.dataset.issue;
   });
+  }
 
   // Warranty check
   var warrantyData = {
@@ -1302,6 +1343,244 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     if (d.length >= 10) r += '-' + d.slice(9,11);
     e.target.value = r;
   });
+})();
+</script>
+<div class="quiz" id="quiz" aria-hidden="true">
+  <div class="quiz__backdrop" data-quiz-close></div>
+  <div class="quiz__panel" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <div class="quiz__top">
+      <div class="quiz__step" id="quizStep">Шаг 1 из 5</div>
+      <button class="quiz__close" type="button" data-quiz-close aria-label="Закрыть">&times;</button>
+    </div>
+    <div class="quiz__bar"><span id="quizBar"></span></div>
+    <div id="quizBody"></div>
+    <div class="quiz__foot">
+      <button class="quiz__back" type="button" id="quizBack" hidden>&larr; Назад</button>
+      <span></span>
+    </div>
+  </div>
+</div>
+<script>
+/* Квиз-калькулятор «Тихий винт» — шаги, расчёт, отправка заявки */
+(function () {
+  var Q = window.__calc;
+  var root = document.getElementById('quiz');
+  if (!Q || !root) return;
+
+  var stepEl = document.getElementById('quizStep');
+  var barEl = document.getElementById('quizBar');
+  var bodyEl = document.getElementById('quizBody');
+  var backEl = document.getElementById('quizBack');
+
+  var URG = [
+    { id: 'asap', label: 'Срочно — сегодня', note: 'Выезд в течение 2–3 часов', add: 1500, term: 'мастер приедет сегодня или завтра' },
+    { id: 'week', label: 'В течение недели', note: 'Выберем удобный день', add: 0, term: 'запишем на любой день на этой неделе' },
+    { id: 'wait', label: 'Можно подождать', note: 'Скидка за гибкость', add: -500, term: 'возьмём в работу в течение 3–5 дней' }
+  ];
+
+  var st = { step: 0, cat: null, dev: null, sym: null, urg: null, sent: null };
+  var lastFocus = null;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function calc() {
+    var data = Q.priceMap[st.cat + '.' + st.dev + '.' + st.sym];
+    if (!data) return null;
+    var adder = (st.urg && st.urg.add) || 0;
+    var lo = Math.max(600, data[0] + adder);
+    var hi = Math.max(lo + 300, data[1] + adder);
+    return { lo: lo, hi: hi, desc: data[2] };
+  }
+
+  function catLabel() { return Q.calcData[st.cat].label; }
+  function devLabel() { return Q.calcData[st.cat].devices[st.dev].label; }
+  function symLabel() { return Q.calcData[st.cat].devices[st.dev].symptoms[st.sym]; }
+
+  function opts(items, activeKey, onPick) {
+    var html = '<div class="quiz__opts">';
+    items.forEach(function (it) {
+      var on = String(it.key) === String(activeKey) ? ' is-active' : '';
+      html += '<button type="button" class="quiz__opt' + on + '" data-key="' + esc(it.key) + '">' +
+        '<span>' + esc(it.label) + (it.note ? '<small>' + esc(it.note) + '</small>' : '') + '</span>' +
+        '<span class="arrow" aria-hidden="true">&rarr;</span></button>';
+    });
+    html += '</div>';
+    bodyEl.insertAdjacentHTML('beforeend', html);
+    bodyEl.querySelectorAll('.quiz__opt').forEach(function (b) {
+      b.addEventListener('click', function () { onPick(b.getAttribute('data-key')); });
+    });
+  }
+
+  function render() {
+    bodyEl.innerHTML = '';
+    var s = st.step;
+    var labels = ['Шаг 1 из 5', 'Шаг 2 из 5', 'Шаг 3 из 5', 'Шаг 4 из 5', 'Результат', 'Шаг 5 из 5', 'Готово'];
+    stepEl.textContent = labels[s] || '';
+    var pct = s >= 4 ? 100 : (s + 1) * 20;
+    barEl.style.width = pct + '%';
+    backEl.hidden = !(s > 0 && s !== 6);
+    bodyEl.scrollTop = 0;
+
+    if (s === 0) {
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Что сломалось?</h3>' +
+        '<p class="quiz__hint">Четыре вопроса — и вы увидите вилку цены и срок. Без звонка и регистрации.</p>';
+      var items = Object.keys(Q.calcData).map(function (k) { return { key: k, label: Q.calcData[k].label }; });
+      opts(items, st.cat, function (k) {
+        st.cat = k; st.dev = null; st.sym = null; st.step = 1; render();
+      });
+    } else if (s === 1) {
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Какое устройство?</h3>' +
+        '<p class="quiz__hint">' + esc(catLabel()) + ' — уточним детали.</p>';
+      var devs = Object.keys(Q.calcData[st.cat].devices).map(function (k) {
+        return { key: k, label: Q.calcData[st.cat].devices[k].label };
+      });
+      opts(devs, st.dev, function (k) { st.dev = k; st.sym = null; st.step = 2; render(); });
+    } else if (s === 2) {
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Что происходит?</h3>' +
+        '<p class="quiz__hint">' + esc(devLabel()) + '. Выберите, что ближе к вашей ситуации.</p>';
+      var syms = Q.calcData[st.cat].devices[st.dev].symptoms;
+      var symItems = Object.keys(syms).map(function (k) { return { key: k, label: syms[k] }; });
+      opts(symItems, st.sym, function (k) { st.sym = k; st.step = 3; render(); });
+    } else if (s === 3) {
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Как срочно?</h3>' +
+        '<p class="quiz__hint">От этого зависит цена выезда и день работы.</p>';
+      var urg = URG.map(function (u) { return { key: u.id, label: u.label, note: u.note }; });
+      opts(urg, st.urg && st.urg.id, function (k) {
+        st.urg = URG.filter(function (u) { return u.id === k; })[0];
+        st.step = 4; render();
+      });
+    } else if (s === 4) {
+      var c = calc();
+      if (!c) { st.step = 0; render(); return; }
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Похоже, это ' + esc(c.desc.toLowerCase().replace(/\.$/, '')) + '</h3>' +
+        '<div class="quiz__price">от ' + Q.fmt(c.lo) + ' до ' + Q.fmt(c.hi) + ' ₽' +
+        '<small>точную цену назовём после бесплатной диагностики — и не изменим</small></div>' +
+        '<ul class="quiz__list">' +
+        '<li>' + esc(devLabel()) + ': ' + esc(symLabel()) + '</li>' +
+        '<li>' + esc(st.urg ? st.urg.term : 'запишем на удобный день') + '</li>' +
+        '<li>Диагностика бесплатно, гарантия до 6 месяцев, выезд по Москве бесплатный при ремонте</li>' +
+        '</ul>' +
+        '<button class="btn btn-primary" type="button" id="quizToForm">Записаться по этой цене</button>' +
+        '<p class="quiz__note">Не починим — денег не возьмём.</p>';
+      document.getElementById('quizToForm').addEventListener('click', function () { st.step = 5; render(); });
+    } else if (s === 5) {
+      var c2 = calc();
+      bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Куда позвонить?</h3>' +
+        '<p class="quiz__hint">Мастер перезвонит в течение 15 минут, назовёт точную цену и подтвердит запись.</p>' +
+        '<div class="quiz__row">' +
+        '<div class="quiz__field"><label for="quizName">Как вас зовут</label><input id="quizName" name="name" autocomplete="name" placeholder="Имя" maxlength="40"></div>' +
+        '<div class="quiz__field"><label for="quizPhone">Телефон</label><input id="quizPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"></div>' +
+        '</div>' +
+        '<div class="quiz__msg" id="quizMsg"></div>' +
+        '<button class="btn btn-primary" type="button" id="quizSend">Получить расчёт и записаться</button>' +
+        '<p class="quiz__note">' + (c2 ? 'Вилка: от ' + Q.fmt(c2.lo) + ' до ' + Q.fmt(c2.hi) + ' ₽. ' : '') +
+        'Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>';
+      var nm = document.getElementById('quizName');
+      var ph = document.getElementById('quizPhone');
+      ph.addEventListener('input', function (e) {
+        var d = e.target.value.replace(/\D/g, '').slice(0, 11);
+        if (!d) { e.target.value = ''; return; }
+        if (d[0] === '8') d = '7' + d.slice(1);
+        if (d[0] !== '7') d = '7' + d;
+        var r = '+7';
+        if (d.length > 1) r += ' (' + d.slice(1, 4);
+        if (d.length >= 5) r += ') ' + d.slice(4, 7);
+        if (d.length >= 8) r += '-' + d.slice(7, 9);
+        if (d.length >= 10) r += '-' + d.slice(9, 11);
+        e.target.value = r;
+      });
+      document.getElementById('quizSend').addEventListener('click', send);
+      setTimeout(function () { nm.focus(); }, 60);
+    } else if (s === 6) {
+      var r = st.sent || {};
+      bodyEl.innerHTML = '<div class="quiz__done">' +
+        '<div class="quiz__check" aria-hidden="true">✓</div>' +
+        '<h3 class="quiz__title" id="quizTitle">Заявка принята' + (r.name ? ', ' + esc(r.name) : '') + '</h3>' +
+        '<p class="quiz__hint">Мастер перезвонит в течение 15 минут' + (r.price ? '. Ориентир по цене — ' + esc(r.price) : '') + '.</p>' +
+        '<button class="btn btn-primary" type="button" data-quiz-close>Закрыть</button></div>';
+      bodyEl.querySelectorAll('[data-quiz-close]').forEach(function (b) {
+        b.addEventListener('click', close);
+      });
+    }
+  }
+
+  function send() {
+    var nm = document.getElementById('quizName');
+    var ph = document.getElementById('quizPhone');
+    var msg = document.getElementById('quizMsg');
+    var name = (nm.value || '').trim();
+    var phone = (ph.value || '').trim();
+    var digits = phone.replace(/\D/g, '');
+    function err(t) { msg.className = 'quiz__msg is-err'; msg.textContent = t; }
+    if (name.length < 2) { err('Напишите, пожалуйста, имя — так мастер знает, к кому обращаться.'); nm.focus(); return; }
+    if (digits.length !== 11) { err('Телефон нужен полностью: +7 и десять цифр.'); ph.focus(); return; }
+    var c = calc();
+    var issue = 'Квиз: ' + catLabel() + ' / ' + devLabel() + ' / ' + symLabel() +
+      '. Срочность: ' + (st.urg ? st.urg.label : 'не указана') +
+      '. Вилка: ' + (c ? Q.fmt(c.lo) + '–' + Q.fmt(c.hi) + ' ₽' : 'не рассчитана') + '.';
+    var btn = document.getElementById('quizSend');
+    btn.disabled = true; btn.textContent = 'Отправляем…';
+    msg.className = 'quiz__msg'; msg.textContent = '';
+    var action = (document.getElementById('requestForm') || {}).action || '/lead';
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 45000);
+    fetch(action, {
+      method: 'POST',
+      body: JSON.stringify({ name: name, phone: phone, issue: issue, source: 'quiz' }),
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      signal: ctrl.signal
+    }).then(function (r) { clearTimeout(timer); return r.json(); })
+      .then(function (res) {
+        if (!res || res.ok !== true) throw new Error('no');
+        st.sent = { name: name, price: c ? 'от ' + Q.fmt(c.lo) + ' до ' + Q.fmt(c.hi) + ' ₽' : '' };
+        st.step = 6; render();
+      })
+      .catch(function () {
+        btn.disabled = false; btn.textContent = 'Получить расчёт и записаться';
+        err('Не удалось отправить. Попробуйте ещё раз или позвоните: +7 (495) 120-45-67.');
+      });
+  }
+
+  function open() {
+    lastFocus = document.activeElement;
+    root.classList.add('is-open');
+    root.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (st.step === 6) { st.step = 0; }
+    render();
+    setTimeout(function () {
+      var first = root.querySelector('.quiz__opt, #quizName, .quiz__close');
+      if (first) first.focus();
+    }, 60);
+  }
+
+  function close() {
+    root.classList.remove('is-open');
+    root.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  root.addEventListener('click', function (e) {
+    if (e.target.closest('[data-quiz-close]')) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!root.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+  });
+  backEl.addEventListener('click', function () {
+    if (st.step > 0) { st.step -= 1; render(); }
+  });
+
+  // Кнопки-запускалки: data-quiz-open
+  document.querySelectorAll('[data-quiz-open]').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.preventDefault(); open(); });
+  });
+  window.openQuiz = open;
 })();
 </script>
 </body>
