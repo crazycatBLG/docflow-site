@@ -519,6 +519,8 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
 .quiz__panel{position:relative;width:100%;max-width:580px;max-height:92vh;overflow:auto;background:var(--white);color:var(--ink);border-radius:18px;box-shadow:0 30px 80px -30px rgba(0,0,0,.55);padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:16px}
 .quiz__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .quiz__step{font-size:.85em;color:var(--ink-soft);letter-spacing:.02em}
+.quiz__discount{margin-left:auto;margin-right:6px;font-size:.82em;font-weight:600;color:#1f6b3a;background:#e6f0e8;border-radius:99px;padding:3px 10px}
+.quiz__disc{margin:2px 0 0;font-size:.92em;color:#1f6b3a;background:#eef5ef;border-radius:10px;padding:9px 12px}
 .quiz__close{background:none;border:0;font-size:1.6rem;line-height:1;color:var(--ink-soft);cursor:pointer;padding:2px 8px;border-radius:8px}
 .quiz__close:hover{background:var(--bg-soft);color:var(--ink)}
 .quiz__bar{height:5px;border-radius:99px;background:var(--bg-soft);overflow:hidden}
@@ -1349,7 +1351,7 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
   <div class="quiz__backdrop" data-quiz-close></div>
   <div class="quiz__panel" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
     <div class="quiz__top">
-      <div class="quiz__step" id="quizStep">Шаг 1 из 5</div>
+      <div class="quiz__step" id="quizStep">Шаг 1 из 5</div><span class="quiz__discount" id="quizDisc"></span>
       <button class="quiz__close" type="button" data-quiz-close aria-label="Закрыть">&times;</button>
     </div>
     <div class="quiz__bar"><span id="quizBar"></span></div>
@@ -1391,9 +1393,17 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     var data = Q.priceMap[st.cat + '.' + st.dev + '.' + st.sym];
     if (!data) return null;
     var adder = (st.urg && st.urg.add) || 0;
-    var lo = Math.max(600, data[0] + adder);
-    var hi = Math.max(lo + 300, data[1] + adder);
-    return { lo: lo, hi: hi, desc: data[2] };
+    var disc = 3 * answers();
+    var lo0 = Math.max(600, data[0] + adder);
+    var hi0 = Math.max(lo0 + 300, data[1] + adder);
+    var lo = Math.round(lo0 * (100 - disc) / 100 / 100) * 100;
+    var hi = Math.round(hi0 * (100 - disc) / 100 / 100) * 100;
+    return { lo: lo, hi: hi, lo0: lo0, hi0: hi0, disc: disc, desc: data[2] };
+  }
+
+  // нарастающая скидка: +3% за каждый ответ, максимум 12% (15% — потолок механики)
+  function answers() {
+    return [st.cat, st.dev, st.sym, st.urg].filter(Boolean).length;
   }
 
   function catLabel() { return Q.calcData[st.cat].label; }
@@ -1420,6 +1430,12 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     var s = st.step;
     var labels = ['Шаг 1 из 5', 'Шаг 2 из 5', 'Шаг 3 из 5', 'Шаг 4 из 5', 'Результат', 'Шаг 5 из 5', 'Готово'];
     stepEl.textContent = labels[s] || '';
+    var discEl = document.getElementById('quizDisc');
+    if (discEl) {
+      var dNow = 3 * answers();
+      discEl.textContent = dNow > 0 ? 'скидка ' + dNow + '%' : '';
+      discEl.style.visibility = dNow > 0 ? 'visible' : 'hidden';
+    }
     var pct = s >= 4 ? 100 : (s + 1) * 20;
     barEl.style.width = pct + '%';
     backEl.hidden = !(s > 0 && s !== 6);
@@ -1459,6 +1475,8 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
       bodyEl.innerHTML = '<h3 class="quiz__title" id="quizTitle">Похоже, это ' + esc(c.desc.toLowerCase().replace(/\.$/, '')) + '</h3>' +
         '<div class="quiz__price">от ' + Q.fmt(c.lo) + ' до ' + Q.fmt(c.hi) + ' ₽' +
         '<small>точную цену назовём после бесплатной диагностики — и не изменим</small></div>' +
+        '<p class="quiz__disc">Скидка ' + c.disc + '% за ' + answers() + ' ответа. Без неё было бы от ' +
+        Q.fmt(c.lo0) + ' до ' + Q.fmt(c.hi0) + ' ₽.</p>' +
         '<ul class="quiz__list">' +
         '<li>' + esc(devLabel()) + ': ' + esc(symLabel()) + '</li>' +
         '<li>' + esc(st.urg ? st.urg.term : 'запишем на удобный день') + '</li>' +
@@ -1521,7 +1539,8 @@ footer h4{color:var(--white);margin:0 0 10px;font-size:1.05em}
     var c = calc();
     var issue = 'Квиз: ' + catLabel() + ' / ' + devLabel() + ' / ' + symLabel() +
       '. Срочность: ' + (st.urg ? st.urg.label : 'не указана') +
-      '. Вилка: ' + (c ? Q.fmt(c.lo) + '–' + Q.fmt(c.hi) + ' ₽' : 'не рассчитана') + '.';
+      '. Вилка: ' + (c ? Q.fmt(c.lo) + '–' + Q.fmt(c.hi) + ' ₽' : 'не рассчитана') +
+      (c && c.disc ? '. Скидка ' + c.disc + '% за ' + answers() + ' ответа.' : '.');
     var btn = document.getElementById('quizSend');
     btn.disabled = true; btn.textContent = 'Отправляем…';
     msg.className = 'quiz__msg'; msg.textContent = '';
